@@ -7,16 +7,7 @@
 static void loadModule(uint8_t ** module, void * targetModuleAddress);
 static uint32_t readUint32(uint8_t ** address);
 
-/*************************************************************
- * Function: loadModules
- * Use: loadModules(payloadStart, targetModuleAddress);
- * -----------------------------------------------------------
- * Description: Loads the modules passed as arguments in
- * 				    an array into the current module.
- * -----------------------------------------------------------
- * Pre-Condition: Modules not loaded.
- * Post-Condition: Modules loaded.
-*************************************************************/
+
 void loadModules(void * payloadStart, void ** targetModuleAddress)
 {
 	int i;

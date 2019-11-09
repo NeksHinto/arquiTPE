@@ -3,6 +3,7 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
+#include <std_buffers.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -37,7 +38,7 @@ typedef int (*EntryPoint)();
  * Function: clearBss
  * Use: clearBSS( bssAdress, bssSize );
  * -----------------------------------------------------------
- * Description: Clears BSS Memory.
+ * Description: Clears BSS Memory to start the OS.
  * -----------------------------------------------------------
  * Pre-Condition: BSS Memory with variables saved.
  * Post-Condition: BSS Memory cleared.
@@ -84,11 +85,13 @@ void* initializeKernelBinary()
 	};
 	loadModules(&endOfKernelBinary, moduleAddresses);
 	clearBSS(&bss, &endOfKernel - &bss);
+	set_up_buffers();
 	return getStackBase();
 }
 
 
 int main()
 {	
+	set_up_buffers();
 	return 0;
 }
