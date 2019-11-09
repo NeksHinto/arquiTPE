@@ -86,7 +86,7 @@ int write_string_in_buffer(int index, char * str) {
         return 1;
 
     while( str )
-        write_char_buffer(index, str++);
+        write_char_in_buffer(index, str++);
     
     return 0;
 }
@@ -115,7 +115,7 @@ int read_string_from_buffer(int index, char *str, int size) {
     int i=0;
     char c;
     do {
-        c = read_char_buffer(index);
+        c = read_char_from_buffer(index);
         str[i++] = c;
     } while( c != 0 && i < size);
 
