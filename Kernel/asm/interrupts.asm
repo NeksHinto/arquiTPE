@@ -133,7 +133,7 @@ picSlaveMask:
 _exception0Handler:
 	exceptionHandler 0
 
-;Invalid optcode
+;Invalid opcode
 _exception6Handler:
 	exceptionHandler 6
 
