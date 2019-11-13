@@ -27,7 +27,7 @@ extern void _hlt(void);
 
 extern void picMasterMask(uint8_t mask);
 
-extern id picSlaveMask(uint8_t mask);
+extern void picSlaveMask(uint8_t mask);
 
 /** Ends cpu execution */
 extern void haltcpu(void);
