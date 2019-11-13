@@ -1,9 +1,9 @@
-GLOBAL beepOn
-GLOBAL beepOff
+GLOBAL _beep
+GLOBAL _unbeep
 
 section .text
 
-beepOn:
+_beep:
     push rbp
     mov rbp, rsp
 
@@ -22,7 +22,7 @@ beepOn:
     
     ret
 
-beepOff:
+_unbeep:
     in al, 61h
     mov al, 00h
     out 61h,al
