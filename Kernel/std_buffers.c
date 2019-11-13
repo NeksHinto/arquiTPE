@@ -5,13 +5,13 @@
  *         buffer ( buffer and it's displayed elements,
  *         it's size and  )
 *************************************************************/
-/*
+
 typedef struct Buffer {
     char buffer[BUFFER_SIZE];
     int start;
     int size;
 }  Buffer;
-*/
+
 
 static Buffer buffers[STANDARD_BUFFERS_AMOUNT];
 
@@ -30,7 +30,7 @@ void set_up_buffers() {
     buffers[STD_ERR] = stderr;
 }
 
-void clear_buffers(int index) {
+void clear_buffer(int index) {
     if(!invalid_index(index)){
         Buffer indexed_buffer = buffers[index];
         indexed_buffer.start = 0;
@@ -86,7 +86,7 @@ int write_string_in_buffer(int index, char * str) {
         return 1;
 
     while( str )
-        write_char_in_buffer(index, str++);
+        write_char_in_buffer(index, *str++);
     
     return 0;
 }
