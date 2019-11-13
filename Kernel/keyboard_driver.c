@@ -45,10 +45,10 @@ void keyboard_handler() {
 		return;
 
 	if(caps_lock)
-		write_char_buffer(STD_IN,upper_case_keys[key]);
+		write_char_in_buffer(STD_IN,upper_case_keys[key]);
 	else if(shift)
-		write_char_buffer(STD_IN,shifted_keyboard[key]);
+		write_char_in_buffer(STD_IN,shifted_keyboard[key]);
 	else
-		write_char_buffer(STD_IN,keyboard[key]);
+		write_char_in_buffer(STD_IN,keyboard[key]);
 }
 

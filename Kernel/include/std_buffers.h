@@ -8,16 +8,6 @@
     #define STANDARD_BUFFERS_AMOUNT 3
 
     /***************************************************************
-     * Buffer: Buffer struct to save information regarding the
-     *                             buffer.
-    ***************************************************************/
-    typedef struct Buffer {
-        char buffer[BUFFER_SIZE];
-        int start;
-        int size;
-    }  Buffer;
-
-    /***************************************************************
     * Function: set_up_buffers
     * Use: set_up_buffers();
     * -------------------------------------------------------------

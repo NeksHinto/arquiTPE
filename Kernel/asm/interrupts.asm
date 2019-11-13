@@ -124,7 +124,7 @@ picSlaveMask:
 	push    rbp
     mov     rbp, rsp
     mov     ax, di  ; ax = 16-bits mask
-    out	    A1h,al
+    out	    0A1h,al
     pop     rbp
     retn
 
