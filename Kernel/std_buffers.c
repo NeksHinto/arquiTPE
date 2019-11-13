@@ -5,7 +5,7 @@
  *         buffer ( buffer and it's displayed elements,
  *         it's size and  )
 *************************************************************/
-/**
+/*
 typedef struct Buffer {
     char buffer[BUFFER_SIZE];
     int start;

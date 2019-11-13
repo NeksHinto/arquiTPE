@@ -3,38 +3,46 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 
+
 static void loadModule(uint8_t ** module, void * targetModuleAddress);
 static uint32_t readUint32(uint8_t ** address);
+
 
 void loadModules(void * payloadStart, void ** targetModuleAddress)
 {
 	int i;
-	uint8_t * currentModule = (uint8_t*)payloadStart;
+	uint8_t* currentModule = (uint8_t*)payloadStart;
 	uint32_t moduleCount = readUint32(&currentModule);
-
 	for (i = 0; i < moduleCount; i++)
 		loadModule(&currentModule, targetModuleAddress[i]);
 }
 
+/*************************************************************
+ * Function: loadModule
+ * Use: loadModule(module,targetModuleAddress);
+ * -----------------------------------------------------------
+ * Description: Loads the module into the target module
+ * 						       address.
+ * -----------------------------------------------------------
+ * Pre-Condition: module not loaded into the target.
+ * Post-Condition: Module loaded.
+*************************************************************/
 static void loadModule(uint8_t ** module, void * targetModuleAddress)
 {
 	uint32_t moduleSize = readUint32(module);
-
-	ncPrint("  Will copy module at 0x");
-	ncPrintHex((uint64_t)*module);
-	ncPrint(" to 0x");
-	ncPrintHex((uint64_t)targetModuleAddress);
-	ncPrint(" (");
-	ncPrintDec(moduleSize);
-	ncPrint(" bytes)");
-
 	memcpy(targetModuleAddress, *module, moduleSize);
 	*module += moduleSize;
-
-	ncPrint(" [Done]");
-	ncNewline();
 }
 
+/*************************************************************
+ * Function: readUint32
+ * Use: uint32 moduleCount = readUint32(moduleAddress)
+ * -----------------------------------------------------------
+ * Description: Returns the module's size.
+ * -----------------------------------------------------------
+ * Pre-Condition: Unknown module size.
+ * Post-Condition: Known module size.
+*************************************************************/
 static uint32_t readUint32(uint8_t ** address)
 {
 	uint32_t result = *(uint32_t*)(*address);
