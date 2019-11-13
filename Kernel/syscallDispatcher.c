@@ -1,6 +1,6 @@
 #include <std_buffers.h>
-// #include <video_driver.h>
-// #include <time.h>
+#include <video_driver.h>
+#include <time.h>
 
 typedef uint64_t(*SystemCall)();
 
@@ -31,7 +31,8 @@ static int __get_minutes();
 static int __get_seconds();
 static int __ticks_elapsed();
 
-SystemCall syscall_array[] = { 0, 0, 0,
+SystemCall syscall_array[] = {
+        0, 0, 0,
     (SystemCall)__get_width,
     (SystemCall)__get_height,
     (SystemCall)__read_pixel,
