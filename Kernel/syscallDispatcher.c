@@ -22,7 +22,7 @@ static char __read_char_from_buffer(int index);
 static int __read_string_from_buffer(int index, char * str,int size);
  
 //sound_driver.h
-// TODO: static void __beep(int ticks);
+static void __beep(int ticks);
  
  //time.h
 static void __wait(int ticks);
@@ -46,7 +46,7 @@ SystemCall syscall_array[] = {
     (SystemCall)__write_string_in_buffer,
     (SystemCall)__read_char_from_buffer,
     (SystemCall)__read_string_from_buffer,
-    0,//(SystemCall)__beep,
+    (SystemCall)__beep,
     (SystemCall)__wait,
     (SystemCall)__get_hours,
     (SystemCall)__get_minutes,
