@@ -3,13 +3,13 @@
 #include <defs.h>
 #include <interrupts.h>
 
-/* ================================== */
-/*        IDT ENTRY DESCRIPTOR        */
-/* ================================== */
+/** ================================== */
+/**        IDT ENTRY DESCRIPTOR        */
+/** ================================== */
 
-/* Backup current alignment */
+/** Backup current alignment */
 #pragma pack(push)
-/* Change alignment to 1-byte for packing the struct */
+/** Change alignment to 1-byte for packing the struct */
 #pragma pack (1)
 
 typedef struct {
@@ -19,11 +19,11 @@ typedef struct {
   uint32_t offset_h, other_cero;
 } idt_entry;
 
-/* Restore alignment */
+/** Restore alignment */
 #pragma pack(pop)
-/* ================================== */
+/** ================================== */
 
-/* IDT of 256 entries  */
+/** IDT of 256 entries  */
 idt_entry * idt = (idt_entry *) 0;
 
 static void setup_IDT_entry (int index, uint64_t offset);

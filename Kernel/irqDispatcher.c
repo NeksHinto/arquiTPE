@@ -2,23 +2,23 @@
 #include <standard_buffers.h>
 #include <keyboard_driver.h>
 
-/* Prototypes */
+/** Prototypes */
 static void int_20();
 static void int_21();
 
-/* ===================================== */
-/*        Interruptions Handler          */
-/* ===================================== */
+/** ===================================== */
+/**        Interruptions Handler          */
+/** ===================================== */
 void (* irq_handler[])() = {
         int_20, // IRQ00: Timer INT20
         int_21  // IRQ01: Keyboard INT21
 };
-/* ===================================== */
+/** ===================================== */
 
 
-/* IRQ Dispatcher */
-/* -------------- */
-/* receive IRQ-number and call corresponding handler */
+/** IRQ Dispatcher */
+/** -------------- */
+/** receive IRQ-number and call corresponding handler */
 void irqDispatcher(uint64_t irq) {
 	irq_handler[irq]();
 }

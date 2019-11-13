@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-/* Controls the creation and management of system calls */
+/** Controls the creation and management of system calls */
 void load_idt();
 
 #endif

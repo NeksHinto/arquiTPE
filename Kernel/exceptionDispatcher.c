@@ -4,30 +4,38 @@
 
 #define REGISTER_NUM 15
 
-typedef void (* exception_ptr)(uint64_t * instructionPointer, uint64_t * stackPointer);
+typedef void (*exception_ptr)(uint64_t * instructionPointer, uint64_t * stackPointer);
 
 static void zero_division(uint64_t * instructionPointer, uint64_t * stackPointer);
 static void invalid_opcode(uint64_t * instructionPointer, uint64_t * stackPointer);
 static void write_registers(uint64_t * instructionPointer, uint64_t * stackPointer);
 
+/** ============================================== */
+/**             Exceptions Handler                 */
+/** ============================================== */
 exception_ptr exceptions[] = {
-        zero_division,0,0,0,0,0,invalid_opcode};
-
+        zero_division,  // EXCEPTION 0
+        0,0,0,0,0,
+        invalid_opcode  // EXCEPTION 1
+};
+/** ============================================== */
 void exceptionDispatcher(int exceptionNum, uint64_t * instructionPointer, uint64_t * stackPointer) {
 	exceptions[exceptionNum](instructionPointer,stackPointer);
 }
 
+/** Division by Zero exception routine */
 static void zero_division(uint64_t * instructionPointer, uint64_t * stackPointer){
 	write_string_buffer(STD_ERR,"ERROR: DIVISION BY ZERO\n");
 	write_registers(instructionPointer, stackPointer);
 }
 
+/** Invalid Operation Code exception routine  */
 static void invalid_opcode(uint64_t * instructionPointer, uint64_t * stackPointer){
-	write_string_buffer(STD_ERR,"ERROR: INVALID INSTRUCTION\n");
+	write_string_buffer(STD_ERR,"ERROR: INVALID OPERATION CODE\n");
 	write_registers(instructionPointer, stackPointer);
 }
 
-/* Write register current status in Standard Error buffer */
+/** Write registers current status in Standard Error buffer */
 static void write_registers(uint64_t * instructionPointer, uint64_t * stackPointer){
 	write_string_buffer(STD_ERR,"RIP: ");
 	write_int_buffer(STD_ERR,(uint64_t)instructionPointer,16);
