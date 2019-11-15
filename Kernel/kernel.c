@@ -2,7 +2,7 @@
 #include <string.h>
 #include <lib.h>
 #include <moduleLoader.h>
-#include <naiveConsole.h>
+#include <idt.h>
 #include <std_buffers.h>
 
 extern uint8_t text;
@@ -11,6 +11,11 @@ extern uint8_t data;
 extern uint8_t bss;
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
+
+
+typedef int (*EntryPoint)();
+
+
 
 /************************************************************
  * PageSize: Paging system defines the size of a page as
@@ -22,6 +27,8 @@ static const uint64_t PageSize = 0x1000;
  * sampeCodeModuleAddress:
 ************************************************************/
 static void* const sampleCodeModuleAddress = (void*)0x400000;
+extern void* instructionPointerBackup;
+extern void* stackPointerBackup;
 
 /************************************************************
  * sampleDatModuleAddress:
@@ -92,6 +99,11 @@ void* initializeKernelBinary()
 
 int main()
 {	
+	load_idt();
 	set_up_buffers();
-	return 0;
+	instructionPointerBackup = sampleCodeModuleAddress;
+	stackPointerBackup = getStackPointer() + 2* 8;
+	((EntryPoint)sampleCodeModuleAddress)();
+
+	return 1;
 }
