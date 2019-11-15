@@ -93,5 +93,6 @@ void* initializeKernelBinary()
 int main()
 {	
 	set_up_buffers();
+
 	return 0;
 }

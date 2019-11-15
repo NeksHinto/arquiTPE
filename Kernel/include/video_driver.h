@@ -10,7 +10,6 @@ typedef struct Color {
     unsigned char blue;
 }Color;
 
-
 uint64_t get_width();
 
 uint64_t get_height();

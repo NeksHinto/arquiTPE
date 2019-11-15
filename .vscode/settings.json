@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "keyboard_driver.h": "c"
+        "keyboard_driver.h": "c",
+        "shell.h": "c",
+        "font.h": "c"
     }
 }
