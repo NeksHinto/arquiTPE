@@ -46,10 +46,10 @@ InfoBlock screen = (InfoBlock) 0x5C00;
 static int valid_position(int x, int y) {
     return x > 0 || x < get_width() || y > 0 || y < get_height(); 
 }
+
 static unsigned char* pixel_position(uint64_t pixel_offset) {
     return (unsigned char*)(screen->framebuffer + pixel_offset*(screen->bpp/8));
 }
-
 
 uint64_t get_width() {
     return screen->width;
@@ -90,11 +90,13 @@ void write_block(uint64_t x, uint64_t y, int base, int height, Color color){
         for(int j=y; j< y+height; j++)
             write_pixel(i, j, color);
 }
+
 void fill_screen(Color color) {
     for(int i=0; i<get_width(); i++) 
         for(int j=0; j<get_height(); j++)
             write_pixel(i, j, color);
 }
+
 void move_screen_up(int pixels, Color background_color) {
     if(pixels <0)
         return;
