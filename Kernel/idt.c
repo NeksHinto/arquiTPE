@@ -12,6 +12,7 @@
 /** Change alignment to 1-byte for packing the struct */
 #pragma pack (1)
 
+/* Interruption descriptor */
 typedef struct {
   uint16_t offset_l, selector;
   uint8_t cero, access;
@@ -37,7 +38,7 @@ void load_idt() {
   setup_IDT_entry (0x06, (uint64_t)&_exception6Handler);
   setup_IDT_entry (0x80, (uint64_t)&_syscallHandler);
 
-  // TimerTick only interruptions
+  // TimerTick interruptions only
   picMasterMask(0xFC);
   picSlaveMask(0xFF);
 
