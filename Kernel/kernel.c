@@ -12,10 +12,7 @@ extern uint8_t bss;
 extern uint8_t endOfKernelBinary;
 extern uint8_t endOfKernel;
 
-
 typedef int (*EntryPoint)();
-
-
 
 /************************************************************
  * PageSize: Paging system defines the size of a page as
@@ -52,7 +49,7 @@ typedef int (*EntryPoint)();
 *************************************************************/
 void clearBSS(void* bssAddress, uint64_t bssSize)
 {
-	memset(bssAddress,0,bssSize);
+	memset(bssAddress, 0, bssSize);
 }
 
 /*************************************************************
@@ -67,10 +64,10 @@ void clearBSS(void* bssAddress, uint64_t bssSize)
 *************************************************************/
 void* getStackBase()
 {
+    //Begin at the top of the stack
 	return (void*)(
-		(uint64_t)&endOfKernel+PageSize*8				
-		-sizeof(uint64_t)			//Begin at the top of the stack
-	);
+	        (uint64_t)&endOfKernel + PageSize*8 - sizeof(uint64_t)
+	        );
 }
 
 /*************************************************************
@@ -102,7 +99,7 @@ int main()
 	load_idt();
 	set_up_buffers();
 	instructionPointerBackup = sampleCodeModuleAddress;
-	stackPointerBackup = getStackPointer() + 2* 8;
+	stackPointerBackup = getStackPointer() + 2*8;
 	((EntryPoint)sampleCodeModuleAddress)();
 
 	return 1;

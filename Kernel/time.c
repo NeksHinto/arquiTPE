@@ -1,6 +1,11 @@
 #include <time.h>
 #include <interrupts.h>
 
+/** This exists in 'time.asm' */
+extern int _get_hours();
+extern int _get_seconds();
+extern int _get_minutes();
+
 /** Initial reference */
 static unsigned long ticks = 0;
 

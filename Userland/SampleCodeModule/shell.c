@@ -6,14 +6,15 @@
 #include <font.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <beep.h>
+#include <time_module.h>
+#include <sound_module.h>
+#include <exception_tester.h>
 
-#define HORIZONTAL_MARGIN 2
-#define VERTICAL_MARGIN 0
-#define STDOUT 1
-#define STDERR 2
-#define MAX_SIZE 255
+#define HORIZONTAL_MARGIN   2
+#define VERTICAL_MARGIN     0
+#define STDOUT              1
+#define STDERR              2
+#define MAX_SIZE            255
 
 
 static const Color BLACK = {0, 0, 0};

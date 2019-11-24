@@ -50,6 +50,7 @@
 void keyboard_handler();
 
 /** Obtains the key code from the keyboard. */
-unsigned char _pressed_key();
+/** This exists in 'keyboard.asm' */
+extern unsigned char _pressed_key();
 
 #endif

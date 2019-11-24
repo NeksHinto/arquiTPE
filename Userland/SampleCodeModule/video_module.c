@@ -5,6 +5,7 @@
 
 static int SCREEN_WIDTH = -1;
 static int SCREEN_HEIGHT = -1;
+
 static int invalid_char(char c) {
 	return c < 32 || c > 255;
 }

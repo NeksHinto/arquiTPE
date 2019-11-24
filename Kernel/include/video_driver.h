@@ -24,5 +24,4 @@ void move_screen_up(int pixels, Color background_color);
 
 void fill_screen(Color color);
 
-
 #endif

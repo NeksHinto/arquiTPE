@@ -1,6 +1,7 @@
 #include <video_driver.h>
 #include <lib.h>
 
+/** Screen info structure */
 typedef struct __attribute__((packed)) ModeInfoBlock {
     uint16_t attributes;	// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
     uint8_t window_a;		// deprecated
@@ -39,7 +40,7 @@ typedef struct __attribute__((packed)) ModeInfoBlock {
     uint8_t reserved1[206];
 } ModeInfoBlock;
 
-typedef ModeInfoBlock* InfoBlock;
+typedef ModeInfoBlock * InfoBlock;
 
 InfoBlock screen = (InfoBlock) 0x5C00;
 
@@ -65,8 +66,8 @@ Color read_pixel(uint64_t x, uint64_t y) {
     if(valid_position(x,y)){
         uint64_t pixel_offset = x + y*get_width();
         unsigned char * current_pixel_position = pixel_position(pixel_offset);
-        color_to_return.red = *(current_pixel_position+2);
-        color_to_return.green = *(current_pixel_position+1);
+        color_to_return.red = *(current_pixel_position + 2);
+        color_to_return.green = *(current_pixel_position + 1);
         color_to_return.blue = *(current_pixel_position);
     }
 
@@ -76,12 +77,12 @@ Color read_pixel(uint64_t x, uint64_t y) {
 void write_pixel(uint64_t x, uint64_t y, Color color) {
     if(!valid_position(x, y))
         return;
-    uint64_t pixel_offset = x + y*get_width();
+    uint64_t pixel_offset = x + y * get_width();
     
     unsigned char * current_pixel_position = pixel_position(pixel_offset);
     
-    *(current_pixel_position+2) = color.red;
-    *(current_pixel_position+1) = color.green;
+    *(current_pixel_position + 2) = color.red;
+    *(current_pixel_position + 1) = color.green;
     *(current_pixel_position) = color.blue;
 }
 

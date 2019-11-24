@@ -4,21 +4,21 @@
 #include <stdarg.h>
 
 void putchar(char c){
-  _syscall(__write_char_buffer, 1, c);
+  _syscall(__write_char_in_buffer, 1, c);
 }
 
 char getchar(){
-	return _syscall(__read_char_buffer, 0);
+	return _syscall(__read_char_from_buffer, 0);
 }
 
 char getchar_from_buffer(int buffer) {
   if(buffer <1 || buffer > 2)
     return 0;
-  return _syscall(__read_char_buffer, buffer);
+  return _syscall(__read_char_from_buffer, buffer);
 }
 
 char putint(uint64_t v, int base) {
-  return _syscall(__write_int_buffer, 1, v, base);
+  return _syscall(__write_int_in_buffer, 1, v, base);
 }
 
 void printf(char* format, ...){

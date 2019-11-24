@@ -30,7 +30,7 @@ unsigned char shifted_keyboard[] = { 0, ESC, '!', '@', '#', '$', '%','^', '&', '
 int caps_lock = 0;
 int shift = 0;
 
-// function that manages the keyboard
+/** Function that manages the keyboard */
 void keyboard_handler() {
 	unsigned char key = _pressed_key();
 	if(key == R_SHIFT || key == L_SHIFT)
@@ -40,7 +40,7 @@ void keyboard_handler() {
 	else if(key == CAPS_LOCK)
 		caps_lock = !caps_lock;
 
-	//returns if its a release or an unprintable key.
+	// returns if its a release or an unprintable key.
 	if ((key & 0x80) != 0 || keyboard[key] == 0)
 		return;
 

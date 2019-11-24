@@ -10,7 +10,7 @@ typedef struct Buffer {
     char buffer[BUFFER_SIZE];
     int start;
     int size;
-}  Buffer;
+} Buffer;
 
 
 static Buffer buffers[STANDARD_BUFFERS_AMOUNT];

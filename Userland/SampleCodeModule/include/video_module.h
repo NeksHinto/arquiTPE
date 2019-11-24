@@ -1,7 +1,7 @@
 #include <stdint.h>
 
 #ifndef VIDEO_MODULE_H
-#define VIDEO_MODULE_H
+    #define VIDEO_MODULE_H
 
 typedef struct Color {
 	unsigned char red;

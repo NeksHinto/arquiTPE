@@ -1,8 +1,9 @@
 #include <std_buffers.h>
 #include <video_driver.h>
 #include <time.h>
+#include <sound_driver.h>
 
-typedef uint64_t(*SystemCall)();
+typedef uint64_t( *SystemCall )();
 
 //video_driver.h
 static uint64_t __get_width();
@@ -46,7 +47,7 @@ SystemCall syscall_array[] = {
     (SystemCall)__write_string_in_buffer,
     (SystemCall)__read_char_from_buffer,
     (SystemCall)__read_string_from_buffer,
-    0,(SystemCall)__beep,
+    (SystemCall)__beep,
     (SystemCall)__wait,
     (SystemCall)__get_hours,
     (SystemCall)__get_minutes,
