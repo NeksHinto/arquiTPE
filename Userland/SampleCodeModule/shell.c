@@ -2,7 +2,6 @@
 #include <video_module.h>
 #include <syscall.h>
 #include <error_handler.h>
-#include <exception_handler.h>
 #include <font.h>
 #include <stdio.h>
 #include <stdlib.h>

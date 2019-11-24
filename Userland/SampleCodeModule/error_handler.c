@@ -13,24 +13,24 @@ void send_error(char * format, ...) {
       switch(*format){
             case 'c' :
               i = va_arg(arg,int);
-              _syscall(__write_char_buffer, 2, i);
+              _syscall(__write_char_in_buffer, 2, i);
               break;
 
             case 'd' :
               i = va_arg(arg,int);
-              _syscall(__write_int_buffer, 2, i, 10);
+              _syscall(__write_int_in_buffer, 2, i, 10);
              break;
 
             case 's':
               s = va_arg(arg,char*);
               while(*s){
-                _syscall(__write_char_buffer, 2, *s);
+                _syscall(__write_char_in_buffer, 2, *s);
                 s++;
               }
               break;
       }
     }else{
-      _syscall(__write_char_buffer, 2, *format);
+      _syscall(__write_char_in_buffer, 2, *format);
     }
   }
 }
