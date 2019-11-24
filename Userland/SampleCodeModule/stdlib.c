@@ -16,7 +16,7 @@ int strlen(char* s) {
 }
 
 
-void itoa(int num, int base, char* str) {
+char* itoa(int num, int base, char* str) {
     int i = 0; 
     int isNegative = 0; 
   
@@ -25,6 +25,7 @@ void itoa(int num, int base, char* str) {
     { 
         str[i++] = '0'; 
         str[i] = '\0'; 
+        return str; 
     } 
   
     // In standard itoa(), negative numbers are handled only with  
@@ -50,15 +51,17 @@ void itoa(int num, int base, char* str) {
     str[i] = '\0'; // Append string terminator 
   
     // Reverse the string 
-    reverse(str, i);  
+    reverse(str, i); 
+  
+    return str; 
 }
 
-void reverse(char* s, int size) {
+void reverse(char* str, int size) {
     char aux;
     for( int i=0; i< size/2; i++) {
-        aux = s[i];
-        s[i] = s[size - i -1];
-        s[size -i -1] = aux;
+        aux = str[i];
+        str[i] = str[size - i -1];
+        str[size -i -1] = aux;
     }
 }
 

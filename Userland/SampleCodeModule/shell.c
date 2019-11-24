@@ -1,13 +1,15 @@
 #include <shell.h>
 #include <video_module.h>
+#include <sound_module.h>
+#include <time_module.h>
 #include <syscall.h>
-#include <error_handler.h>
-#include <exception_handler.h>
 #include <font.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
-#include <beep.h>
+#include <error_handler.h>
+#include <exception_tester.h>
+#include <pong.h>
+#include <snake.h>
 
 #define HORIZONTAL_MARGIN 2
 #define VERTICAL_MARGIN 0
@@ -171,6 +173,9 @@ static void clear_buffer() {
   buffer_index = 0;
 }
 
+
+
+
 static void command_dispatcher(char *buffer) {
   int i,j;
 	 char command[MAX_SIZE] = {0};
@@ -257,21 +262,36 @@ static void command_dispatcher(char *buffer) {
     _invalid_op_code();
     return;
   }
+  if(strcmp(command, "pong")) {
+    clear_screen();
+    game();
+    clear_screen();
+    return;
+  }
+
+  if(strcmp(command, "snake")) {
+    clear_screen();
+    snake_game();
+    clear_screen();
+    return;
+  }
   
   send_error("Unrecognized command.");
 }
 
 static void help() {
     printf("Commands:\n");
-    printf("help -- Shows available commands.\n");
-    printf("clear -- Clears the screen.\n");
-    printf("beep num-- Receives an number as a parameter and beeps for that amount of ticks.\n");
-    printf("echo string -- Recieves a string as parameter and repeats it as output\n");
-    printf("width -- Shows the screen width.\n");
-    printf("height -- Shows the screen height.\n");
-    printf("div0 -- Tests division by zero exception.\n");
-    printf("invOp -- Tests invalid op code exception.\n");
-    printf("time -- Shows the current system time.\n");
+    printf("\thelp -- Shows available commands.\n");
+    printf("\tclear -- Clears the screen.\n");
+    printf("\tbeep num -- Receives an number as a parameter and beeps for that amount of ticks.\n");
+    printf("\techo string -- Recieves a string as parameter and repeats it as output\n");
+    printf("\twidth -- Shows the screen width.\n");
+    printf("\theight -- Shows the screen height.\n");
+    printf("\tdiv0 -- Tests division by zero exception.\n");
+    printf("\tinvOp -- Tests invalid op code exception.\n");
+    printf("\ttime -- Shows the current system time.\n");
+    printf("\tpong -- Opens the pong game.\n\t\tPress [SPACE] to start.\n\t\tPlayer1 moves with [W] and [S] and Player2 with [O] and [L].\n\t\tPress [X] to exit.\n");
+    printf("\tsnake -- Opens the snake game. \n\t\tPress [SPACE] to start.\n\t\tPlease use AWSD to move LEFT, UP, DOWN, RIGHT respectively.\n\t\t[PAUSE] by pressing [P].\n\t\tWhen GAME OVER, restart game with [R].\n\t\tEvery 15 seconds the snake will grow & increase its speed.\n\t\tExit by pressing [X] at any time.");
   }
 
 static void clear_screen() {

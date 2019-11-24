@@ -1,11 +1,10 @@
 #include <keyboard_driver.h>
-#include <std_buffers.h>
-
-#define CAPS_LOCK         0x3A
-#define R_SHIFT           0x36
-#define R_SHIFT_REALEASE  0xB6
-#define L_SHIFT           0x2A
-#define L_SHIFT_REALEASE  0xAA
+#include <standard_buffers.h>
+#define CAPS_LOCK 0x3A
+#define R_SHIFT 0x36
+#define R_SHIFT_REALEASE 0xB6
+#define L_SHIFT 0x2A
+#define L_SHIFT_REALEASE 0xAA
 
 unsigned char keyboard[] = { 0, ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=',
 BACKSPACE,TAB, 'q', 'w','e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', ENTER, 0,'a', 's', 'd', 'f', 'g', 'h',
@@ -30,7 +29,7 @@ unsigned char shifted_keyboard[] = { 0, ESC, '!', '@', '#', '$', '%','^', '&', '
 int caps_lock = 0;
 int shift = 0;
 
-// function that manages the keyboard
+//function that manages the keyboard
 void keyboard_handler() {
 	unsigned char key = _pressed_key();
 	if(key == R_SHIFT || key == L_SHIFT)
@@ -45,10 +44,10 @@ void keyboard_handler() {
 		return;
 
 	if(caps_lock)
-		write_char_in_buffer(STD_IN,upper_case_keys[key]);
+		write_char_buffer(STD_IN,upper_case_keys[key]);
 	else if(shift)
-		write_char_in_buffer(STD_IN,shifted_keyboard[key]);
+		write_char_buffer(STD_IN,shifted_keyboard[key]);
 	else
-		write_char_in_buffer(STD_IN,keyboard[key]);
+		write_char_buffer(STD_IN,keyboard[key]);
 }
 

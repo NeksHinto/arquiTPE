@@ -25,7 +25,3 @@ From the x64BareBones project directory run:
 From the x64BareBones project directory run:
 
   user@linux:$ ./run.sh
-
-
-Author: Rodrigo Rearden (RowDaBoat)
-Collaborator: Augusto Nizzo McIntosh

@@ -1,36 +1,33 @@
-#ifndef INTERRUPTS_H_
-    #define INTERRUPTS_H_
+ /*
+ *   interrupts.h
+ *
+ *  Created on: Apr 18, 2010
+ *      Author: anizzomc
+ */
 
-#include <idt.h>
-/** ============================================== */
-/**       Declaration for ASM functions:           */
-/** Al this exists in 'interrupts.asm'             */
-/** ============================================== */
+#ifndef INTERRUPS_H_
+#define INTERRUPS_H_
 
-/** See 'irqDispatcher.c' for IRQx declaration */
-extern void _irq00Handler(void);
+#include <idtLoader.h>
 
-extern void _irq01Handler(void);
+void _irq00Handler(void);
+void _irq01Handler(void);
 
-/** See 'exceptionDispatcher.c' for Exception declarations */
-extern void _exception0Handler(void);
+void _exception0Handler(void);
+void _exception6Handler(void);
+void _syscallHandler(uint64_t,uint64_t,uint64_t,uint64_t,uint64_t);
 
-extern void _exception6Handler(void);
+void _cli(void);
 
-extern void _syscallHandler(uint64_t,uint64_t,uint64_t,uint64_t,uint64_t);
+void _sti(void);
 
-extern void _cli(void);
+void _hlt(void);
 
-extern void _sti(void);
+void picMasterMask(uint8_t mask);
 
-extern void _hlt(void);
+void picSlaveMask(uint8_t mask);
 
-extern void picMasterMask(uint8_t mask);
+//Termina la ejecución de la cpu.
+void haltcpu(void);
 
-extern void picSlaveMask(uint8_t mask);
-
-/** Ends cpu execution */
-extern void haltcpu(void);
-
-
-#endif /* INTERRUPTS_H_ */
+#endif /* INTERRUPS_H_ */

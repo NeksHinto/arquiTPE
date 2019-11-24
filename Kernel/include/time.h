@@ -9,9 +9,9 @@ int get_minutes();
 int get_seconds();
 void wait(int ticks);
 
-/** This exists in 'time.asm' */
-extern int _get_hours();
-extern int _get_seconds();
-extern int _get_minutes();
+//Assembly library
+int _get_hours();
+int _get_seconds();
+int _get_minutes();
 
 #endif

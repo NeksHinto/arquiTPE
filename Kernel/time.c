@@ -1,7 +1,6 @@
 #include <time.h>
 #include <interrupts.h>
 
-/** Initial reference */
 static unsigned long ticks = 0;
 
 void timer_handler() {
@@ -27,6 +26,7 @@ int get_hours(){
 int get_seconds(){
 	return _get_seconds();
 }
+
 
 void wait(int ticks) {
 	_sti();
