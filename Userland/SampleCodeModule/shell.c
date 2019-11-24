@@ -10,6 +10,7 @@
 #include <exception_tester.h>
 #include <pong.h>
 #include <snake.h>
+#include <pseudo_game.h>
 
 #define HORIZONTAL_MARGIN 2
 #define VERTICAL_MARGIN 0
@@ -275,6 +276,13 @@ static void command_dispatcher(char *buffer) {
     clear_screen();
     return;
   }
+
+    if(strcmp(command, "aracnoid")) {
+        clear_screen();
+        pseudo_game();
+        clear_screen();
+        return;
+    }
   
   send_error("Unrecognized command.");
 }
@@ -292,7 +300,9 @@ static void help() {
     printf("\ttime -- Shows the current system time.\n");
     printf("\tpong -- Opens the pong game.\n\t\tPress [SPACE] to start.\n\t\tPlayer1 moves with [W] and [S] and Player2 with [O] and [L].\n\t\tPress [X] to exit.\n");
     printf("\tsnake -- Opens the snake game. \n\t\tPress [SPACE] to start.\n\t\tPlease use AWSD to move LEFT, UP, DOWN, RIGHT respectively.\n\t\t[PAUSE] by pressing [P].\n\t\tWhen GAME OVER, restart game with [R].\n\t\tEvery 15 seconds the snake will grow & increase its speed.\n\t\tExit by pressing [X] at any time.");
-  }
+    printf("\taracnoid -- Opens the aracnoid game.\n\t\tPress [SPACE] to start.\n\t\tPlayer1 moves with [W] and [S] and Player2 with [O] and [L].\n\t\tPress [X] to exit.\n");
+
+}
 
 static void clear_screen() {
   fill_screen( BACKGROUND_COLOR);
