@@ -2,8 +2,6 @@
 #include <standard_buffers.h>
 #include <keyboard_driver.h>
 
-
-
 static void int_20();
 static void int_21();
 
