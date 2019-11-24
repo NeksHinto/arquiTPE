@@ -1,6 +1,7 @@
 #include <standard_buffers.h>
 #include <video_driver.h>
 #include <time.h>
+#include <sound_driver.h>
 
 typedef uint64_t(*SystemCall)();
 //video_driver.h

@@ -49,7 +49,7 @@ int main() {
 	load_idt();
 	set_up_buffers();
 	instructionPointerBackup = sampleCodeModuleAddress;
-	stackPointerBackup = getStackPointer() + 2*8;
+	//stackPointerBackup = getStackPointer() + 2*8;
 	((EntryPoint)sampleCodeModuleAddress)();
 	return 1;
 }

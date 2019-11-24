@@ -39,6 +39,7 @@ typedef struct __attribute__((packed)) ModeInfoBlock {
 	uint16_t off_screen_mem_size;	// size of memory in the framebuffer but not being displayed on the screen
 	uint8_t reserved1[206];
 } ModeInfoBlock;
+
 typedef struct Color {
     unsigned char red;
 		unsigned char green;
