@@ -14,8 +14,6 @@ static int start_time;
 static int aux_time;
 static int real_time_played;
 
-static int time_counter;
-
 static const Color white = {225,225,225};
 static const Color black = {0,0,0};
 static const Color green = {4, 242, 32};
@@ -146,7 +144,7 @@ int get_seconds() {
 }
 
 Game* pseudo_game(){
-    int ticks;
+    int ticks, time_counter;
     start_game();
     time_counter = get_seconds();
     while(1){
