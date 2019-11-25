@@ -26,7 +26,7 @@ typedef struct Game {
     Entity ball;
     Entity player;
     int game_over;
-    int blocks_q;
+    int remaining_blocks;
 } Game;
 
 typedef Game* GameADT;
