@@ -125,7 +125,7 @@ int get_seconds() {
     return (atoi(hours) * 3600) + (atoi(minutes) * 60) + atoi(seconds);
 }
 
-Game* pseudo_game(){
+Game pseudo_game(){
     int ticks, time_counter;
     char c;
     SCREEN_WIDTH = get_screen_width();
@@ -151,7 +151,7 @@ Game* pseudo_game(){
     draw_entity(game->ball);
     start_game();
     time_counter = get_seconds();
-    while((c = getchar()) != 'x' && c != 'X'){
+    while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P' && !game->game_over ){
         if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
             update_player(10);
         }
@@ -160,8 +160,11 @@ Game* pseudo_game(){
         }
 
         if( get_seconds() - time_counter >= 1 ){
-            if( game->ball.position.y <= 10 ){
+            if( game->ball.position.y <= 27 ){
                 game->ball.speed.y = 25;
+            }
+            if( game->ball.position.y > SCREEN_HEIGHT ){
+                game->game_over = TRUE;
             }
             update_ball();
             time_counter = get_seconds();
@@ -169,5 +172,5 @@ Game* pseudo_game(){
 
 
     }
-    return NULL;
+    return aux;
 }

@@ -31,7 +31,7 @@ typedef struct Game {
 
 typedef Game* GameADT;
 
-GameADT  pseudo_game();
+Game  pseudo_game();
 
 
 #endif
