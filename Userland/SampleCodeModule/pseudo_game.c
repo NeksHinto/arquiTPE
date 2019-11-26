@@ -31,7 +31,7 @@ static void update_player();
 static int there_is_impact();
 static void game_refresh();
 
-GameADT game;
+static GameADT game;
 
 static void draw_borders_arc(Color color) {
     write_block(0, 0, SCREEN_WIDTH, 10, color); // Top
@@ -41,27 +41,7 @@ static void draw_borders_arc(Color color) {
 }
 
 static void start_game(){
-    SCREEN_WIDTH = get_screen_width();
-    SCREEN_HEIGHT = get_screen_height();
-    Game aux;
-    aux = (Game){
-            .player = { {.x = SCREEN_WIDTH/2 - 20, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 10, 40, green},
-            .ball = { {.x= SCREEN_WIDTH/2 - 3, .y = SCREEN_HEIGHT - 16},{.x = 0, .y = -3}, 6, 6, yellow},
-            .blocks = {
-                    { {.x = 30, .y = 10 }, {.x = 0, .y = 0}, 30, 60, red },
-                    { {.x = SCREEN_WIDTH - 90, .y = 10 }, {.x = 0, .y = 0}, 30, 60, red }
-            },
-            .game_over = FALSE
-    };
-    game = &aux;
-    score = 0;
-    game->remaining_blocks = 0;
 
-
-    fill_screen(black);
-    draw_borders_arc(white);
-    draw_player();
-    draw_entity(game->ball);
 
     for( int i = 0; i < MAX_BLOCKS; i++ ){
         draw_entity(game->blocks[i]);
@@ -83,9 +63,11 @@ static void update_ball(){
     draw_entity(game->ball);
 }
 
-static void update_player(){
-    game->player.position = (Position){ .x = game->player.position.x + game->player.speed.x,
-            .y = game->player.position.y + game->player.speed.y};
+static void update_player( int n){
+    delete_entity(game->player);
+    game->player.position = (Position){ .x = game->player.position.x + n,
+            .y = game->player.position.y};
+    draw_entity(game->player);
 }
 
 static void draw_player() {
@@ -113,7 +95,7 @@ static void game_refresh(){
     draw_entity( game->player );
 
     update_ball();
-    update_player();
+    update_player(1);
 }
 //
 //Game* pseudo_game( Game* saved_game ){
@@ -145,13 +127,47 @@ int get_seconds() {
 
 Game* pseudo_game(){
     int ticks, time_counter;
+    char c;
+    SCREEN_WIDTH = get_screen_width();
+    SCREEN_HEIGHT = get_screen_height();
+    Game aux;
+    aux = (Game){
+            .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 20, 60, green},
+            .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -20}, 10, 10, yellow},
+            .blocks = {
+                    { {.x = 30, .y = 10 }, {.x = 0, .y = 0}, 30, 60, red },
+                    { {.x = SCREEN_WIDTH - 90, .y = 10 }, {.x = 0, .y = 0}, 30, 60, red }
+            },
+            .game_over = FALSE
+    };
+    game = &aux;
+    score = 0;
+    game->remaining_blocks = 0;
+
+
+    fill_screen(black);
+    draw_borders_arc(white);
+    draw_player();
+    draw_entity(game->ball);
     start_game();
     time_counter = get_seconds();
-    while(1){
-        if( get_seconds() - time_counter >= 3 ){
+    while((c = getchar()) != 'x' && c != 'X'){
+        if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
+            update_player(10);
+        }
+        else if( c == 'a' && game->player.position.x >= 20){
+            update_player(-10);
+        }
+
+        if( get_seconds() - time_counter >= 1 ){
+            if( game->ball.position.y <= 10 ){
+                game->ball.speed.y = 25;
+            }
             update_ball();
             time_counter = get_seconds();
         }
 
+
     }
+    return NULL;
 }
