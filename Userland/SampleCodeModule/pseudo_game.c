@@ -97,22 +97,6 @@ static void game_refresh(){
     update_ball();
     update_player(1);
 }
-//
-//Game* pseudo_game( Game* saved_game ){
-//   char c;
-//    if( saved_game == NULL){
-//        start_game();
-//    }
-//    else{
-//        game = saved_game;
-//    }
-//
-//    while( !game->game_over ){
-//        game_refresh();
-//    }
-//
-//    return game;
-//}
 
 int get_seconds() {
     char hours[3];
@@ -125,15 +109,32 @@ int get_seconds() {
     return (atoi(hours) * 3600) + (atoi(minutes) * 60) + atoi(seconds);
 }
 
+int hits_player( Entity ball, Entity player ){
+    int x1,y1,x2,y2;
+    for( x1 = game->ball.position.x; x1 < game->ball.position.x + game->ball.width; x1++ ){
+        for( y1 = game->ball.position.y; y1 < game->ball.position.y + game->ball.height; y1++ ){
+            for( x2 = game->player.position.x; x2  < game->player.position.x + game->player.width; x2++ ){
+                for( y2 = game->player.position.y; y2 < game->player.position.y + game->player.height; y2++ ){
+                    if( x1 == x2 && y1 == y2 ){
+                        return TRUE;
+                    }
+                }
+            }
+        }
+    }
+    return FALSE;
+}
+
 Game pseudo_game(){
-    int ticks, time_counter;
+    int ticks, time_counter, is_moving;
     char c;
+    is_moving = FALSE;
     SCREEN_WIDTH = get_screen_width();
     SCREEN_HEIGHT = get_screen_height();
     Game aux;
     aux = (Game){
             .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 20, 60, green},
-            .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -20}, 10, 10, yellow},
+            .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -10}, 10, 10, yellow},
             .blocks = {
                     { {.x = 30, .y = 10 }, {.x = 0, .y = 0}, 30, 60, red },
                     { {.x = SCREEN_WIDTH - 90, .y = 10 }, {.x = 0, .y = 0}, 30, 60, red }
@@ -150,24 +151,35 @@ Game pseudo_game(){
     draw_player();
     draw_entity(game->ball);
     start_game();
-    time_counter = get_seconds();
+    time_counter = ticks_elapsed();
     while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P' && !game->game_over ){
         if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
+            game->player.speed.x = 10;
             update_player(10);
+            is_moving = TRUE;
         }
         else if( c == 'a' && game->player.position.x >= 20){
+            game->player.speed.x = -10;
             update_player(-10);
+            is_moving = TRUE;
         }
 
-        if( get_seconds() - time_counter >= 1 ){
+        if( ticks_elapsed() - time_counter >= 1 ){
+            if( hits_player(game->ball, game->player) ){
+                if( is_moving ){
+                    game->ball.speed.x = - game->player.speed.x;
+                }
+                game->ball.speed.y = -game->ball.speed.y;
+            }
             if( game->ball.position.y <= 27 ){
-                game->ball.speed.y = 25;
+                game->ball.speed.y = -game->ball.speed.y;
             }
             if( game->ball.position.y > SCREEN_HEIGHT ){
                 game->game_over = TRUE;
             }
             update_ball();
-            time_counter = get_seconds();
+            time_counter = ticks_elapsed();
+            is_moving = FALSE;
         }
 
 
