@@ -17,7 +17,7 @@ typedef struct Speed {
 typedef struct Entity {
     Position position;
     Speed speed;
-    int height,width;
+    int height,width, visible;
     Color color;
 } Entity;
 

@@ -85,19 +85,6 @@ static int there_is_impact(){
     return FALSE;
 }
 
-static void game_refresh(){
-    if( there_is_impact() ){
-        game->game_over = TRUE;
-        return;
-    }
-
-    draw_entity( game->ball );
-    draw_entity( game->player );
-
-    update_ball();
-    update_player(1);
-}
-
 int get_seconds() {
     char hours[3];
     itoa(system_hours(), 16, hours);
@@ -125,6 +112,30 @@ int hits_player( Entity ball, Entity player ){
     return FALSE;
 }
 
+int check_impact( Entity ball, Entity blocks[]){
+    int i, x1, x2, y1, y2;
+
+    for( i = 0; i < MAX_BLOCKS; i++ ){
+        if( blocks[i].visible ){
+            for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
+                for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
+                    for( x2 = blocks[i].position.x; x2 < blocks[i].position.x + blocks[i].width; x2++ ){
+                        for( y2 = blocks[i].position.y; y2 < blocks[i].position.y + blocks[i].height; y2++ ){
+                            if( x1 == x2 && y1 == y2 ){
+                                delete_entity(blocks[i]);
+                                blocks[i].visible = FALSE;
+                                return TRUE;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return FALSE;
+}
+
 Game pseudo_game(){
     int ticks, time_counter, is_moving;
     char c;
@@ -133,11 +144,11 @@ Game pseudo_game(){
     SCREEN_HEIGHT = get_screen_height();
     Game aux;
     aux = (Game){
-            .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 20, 60, green},
-            .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -10}, 10, 10, yellow},
+            .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 20, 60, TRUE, green},
+            .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -10}, 10, 10, TRUE, yellow},
             .blocks = {
-                    { {.x = 30, .y = 10 }, {.x = 0, .y = 0}, 30, 60, red },
-                    { {.x = SCREEN_WIDTH - 90, .y = 10 }, {.x = 0, .y = 0}, 30, 60, red }
+                    { {.x = SCREEN_WIDTH/2 - 20, .y = SCREEN_HEIGHT/2 - 20 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                    { {.x = SCREEN_WIDTH - 200, .y = SCREEN_HEIGHT - 300 }, {.x = 0, .y = 0}, 30, 60, TRUE, red }
             },
             .game_over = FALSE
     };
@@ -171,6 +182,9 @@ Game pseudo_game(){
                 }
                 game->ball.speed.y = -game->ball.speed.y;
             }
+            if( game->ball.position.x <= 27 || game->ball.position.x >= SCREEN_WIDTH - 27 ){
+                game->ball.speed.x = -game->ball.speed.x;
+            }
             if( game->ball.position.y <= 27 ){
                 game->ball.speed.y = -game->ball.speed.y;
             }
@@ -182,7 +196,9 @@ Game pseudo_game(){
             is_moving = FALSE;
         }
 
-
+        if( check_impact(game->ball, game->blocks) ){
+            game->ball.speed.y = -game->ball.speed.y;
+        }
     }
     return aux;
 }
