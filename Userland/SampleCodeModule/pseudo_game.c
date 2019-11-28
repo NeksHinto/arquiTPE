@@ -66,6 +66,7 @@ static Game start_game(){
                                           },
                                 .game_over = FALSE,
                                 .remaining_blocks = MAX_BLOCKS,
+                                .score = 0,
     };
     return game_started;
 }
@@ -184,6 +185,7 @@ Speed hits_player( Entity ball, Entity player ){
 
 int check_impact( Entity ball, Entity blocks[]){
  int i, x1, x2, y1, y2;
+
     for( i = 0; i < MAX_BLOCKS; i++ ){
         if( blocks[i].visible ){
             for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
@@ -192,6 +194,7 @@ int check_impact( Entity ball, Entity blocks[]){
                         if( x2 == x1 && ( y1 == blocks[i].position.y || y1 == blocks[i].position.y + blocks[i].height )){
                             delete_entity(blocks[i]);
                             blocks[i].visible = FALSE;
+                            game->score += 10;
                             return TRUE;
                         }
                     }
@@ -200,6 +203,7 @@ int check_impact( Entity ball, Entity blocks[]){
                         {
                             delete_entity(blocks[i]);
                             blocks[i].visible = FALSE;
+                            game->score += 10;
                             return TRUE;
                         }
                     }
@@ -239,8 +243,6 @@ Game pseudo_game(){
 //
 //    }while (!leave);
 
-
-
     aux = start_game();
     game = &aux;
     score = 0;
@@ -248,6 +250,7 @@ Game pseudo_game(){
     draw_game();
 
     time_counter = ticks_elapsed();
+
     while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P' && !game->game_over ){
         if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
             game->player.speed.x = 20;

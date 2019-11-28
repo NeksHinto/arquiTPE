@@ -27,6 +27,7 @@ typedef struct Game {
     Entity player;
     int game_over;
     int remaining_blocks;
+    unsigned int score;
 } Game;
 
 typedef Game* GameADT;
