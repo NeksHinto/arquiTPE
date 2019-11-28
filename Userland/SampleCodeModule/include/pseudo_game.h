@@ -2,7 +2,7 @@
     #define PSEUDO_GAME_H
 
 #define FALSE 0
-#define MAX_BLOCKS 2
+#define MAX_BLOCKS 18
 #define TRUE !FALSE
 #define NULL 0
 

@@ -19,17 +19,17 @@ static const Color black = {0,0,0};
 static const Color green = {4, 242, 32};
 static const Color red = {255, 0, 0};
 static const Color yellow = {255, 255, 0};
+static const Color violet = {120, 40, 140};
 
 
 /** Static prototypes */
 static void draw_player();
-static void start_game();
+static Game start_game();
 static void draw_borders_arc(Color color);
 static void draw_entity(Entity entity);
 static void update_ball();
 static void update_player();
 static int there_is_impact();
-static void game_refresh();
 
 static GameADT game;
 
@@ -40,9 +40,41 @@ static void draw_borders_arc(Color color) {
     write_block(SCREEN_WIDTH-10, 0, 10, SCREEN_HEIGHT, color); // Right
 }
 
-static void start_game(){
+static Game start_game(){
+    Game game_started = (Game){
+                                .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 20, 60, TRUE, green},
+                                .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -10}, 10, 10, TRUE, yellow},
+                                .blocks = {
+                                            { {.x = SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                            { {.x = SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+                                            { {.x = SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet},
+                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+                                          },
+                                .game_over = FALSE,
+                                .remaining_blocks = MAX_BLOCKS,
+    };
+    return game_started;
+}
 
-
+static void draw_game(){
+    fill_screen(black);
+    draw_borders_arc(white);
+    draw_player();
+    draw_entity(game->ball);
     for( int i = 0; i < MAX_BLOCKS; i++ ){
         draw_entity(game->blocks[i]);
     }
@@ -143,35 +175,43 @@ Game pseudo_game(){
     SCREEN_WIDTH = get_screen_width();
     SCREEN_HEIGHT = get_screen_height();
     Game aux;
-    aux = (Game){
-            .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 20, 60, TRUE, green},
-            .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -10}, 10, 10, TRUE, yellow},
-            .blocks = {
-                    { {.x = SCREEN_WIDTH/2 - 20, .y = SCREEN_HEIGHT/2 - 20 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                    { {.x = SCREEN_WIDTH - 200, .y = SCREEN_HEIGHT - 300 }, {.x = 0, .y = 0}, 30, 60, TRUE, red }
-            },
-            .game_over = FALSE
-    };
+
+
+    //bool leave = false;
+    //int currentGameTick = 0, previusGameTick =0;
+
+//    do{
+//        currentGameTick = getTicks();
+//
+//        ParseInput();
+//
+//        if((currentGameTick % 1) == 0 && currentGameTick != previusGameTick){
+//            previusGameTick = currentGameTick;
+//
+//            runGame();
+//
+//        }
+//
+//    }while (!leave);
+
+
+
+    aux = start_game();
     game = &aux;
     score = 0;
-    game->remaining_blocks = 0;
-
-
-    fill_screen(black);
-    draw_borders_arc(white);
-    draw_player();
-    draw_entity(game->ball);
     start_game();
+    draw_game();
+
     time_counter = ticks_elapsed();
     while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P' && !game->game_over ){
         if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
-            game->player.speed.x = 10;
-            update_player(10);
+            game->player.speed.x = 20;
+            update_player(20);
             is_moving = TRUE;
         }
         else if( c == 'a' && game->player.position.x >= 20){
-            game->player.speed.x = -10;
-            update_player(-10);
+            game->player.speed.x = -20;
+            update_player(-20);
             is_moving = TRUE;
         }
 
@@ -192,6 +232,8 @@ Game pseudo_game(){
                 game->game_over = TRUE;
             }
             update_ball();
+            draw_player();
+            draw_borders_arc(white);
             time_counter = ticks_elapsed();
             is_moving = FALSE;
         }
@@ -200,5 +242,11 @@ Game pseudo_game(){
             game->ball.speed.y = -game->ball.speed.y;
         }
     }
+
+    if( c == 'p' || c == 'P' ){
+        return aux;
+    }
+
+    game->game_over = TRUE;
     return aux;
 }
