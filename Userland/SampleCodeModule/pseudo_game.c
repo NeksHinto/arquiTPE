@@ -84,9 +84,29 @@ static void draw_game(){
 
 static void draw_gameBoard(){
     char time[9] = {'0','0', '.', '0', '0', '.', '0', '0', '\0'};
-
+    real_time_played = get_seconds() - start_time;
     write_sized_string("TIME: ", 15, 15, white, black, 2, 15);
-    itoa(system_seconds(), 16, time + 6);
+    itoa(real_time_played / 3600, 10, time + 0 );
+    if( time[1] == 0 ){
+        time[1] = time[0];
+        time[0] = '0';
+    }
+    else{
+        time[2] = '.';
+    }
+    itoa((real_time_played / 60) % 60, 10, time + 3 );
+    if( time[4] == 0 ){
+        time[4] = time[3];
+        time[3] = '0';
+    }
+    else{
+        time[5] = '.';
+    }
+    itoa(real_time_played % 60, 10, time + 6);
+    if( time[7] == 0 ){
+        time[7] = time[6];
+        time[6] = '0';
+    }
     write_sized_string(time, 6 * 20, 15, white, black, 2, 15);
 }
 
@@ -199,22 +219,12 @@ int check_impact( Entity ball, Entity blocks[]){
         if( blocks[i].visible ){
             for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
                 for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
-                    for( x2 = blocks[i].position.x; x2 < blocks[i].position.x + blocks[i].width; x2++ ){
-                        if( x2 == x1 && ( y1 == blocks[i].position.y || y1 == blocks[i].position.y + blocks[i].height )){
-                            delete_entity(blocks[i]);
-                            blocks[i].visible = FALSE;
-                            game->score += 10;
-                            return TRUE;
-                        }
-                    }
-                    for( y2 = blocks[i].position.y; y2 < blocks[i].position.y + blocks[i].height; y2++ ){
-                        if( y2 == y1 && ( x1 == blocks[i].position.x || x1 == blocks[i].position.x + blocks[i].width ))
-                        {
-                            delete_entity(blocks[i]);
-                            blocks[i].visible = FALSE;
-                            game->score += 10;
-                            return TRUE;
-                        }
+                    if( x1 >= blocks[i].position.x && x1 < blocks[i].position.x + blocks[i].width &&
+                        y1 >= blocks[i].position.y && y1 < blocks[i].position.y + blocks[i].height ){
+                        delete_entity(blocks[i]);
+                        blocks[i].visible = FALSE;
+                        game->score += 10;
+                        return TRUE;
                     }
                 }
             }
@@ -259,7 +269,7 @@ Game pseudo_game(){
     draw_game();
 
     time_counter = ticks_elapsed();
-
+    start_time = get_seconds();
     while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P' && !game->game_over ){
         if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
             game->player.speed.x = 20;
