@@ -43,7 +43,7 @@ static void draw_borders_arc(Color color) {
 static Game start_game(){
     Game game_started = (Game){
                                 .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 20, 60, TRUE, green},
-                                .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -10}, 10, 10, TRUE, yellow},
+                                .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -20}, 10, 10, TRUE, yellow},
                                 .blocks = {
                                             { {.x = SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
                                             { {.x = SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
@@ -128,21 +128,57 @@ int get_seconds() {
     return (atoi(hours) * 3600) + (atoi(minutes) * 60) + atoi(seconds);
 }
 
-int hits_player( Entity ball, Entity player ){
+Speed hits_player( Entity ball, Entity player ){
     int x1,y1,x2,y2;
-    for( x1 = game->ball.position.x; x1 < game->ball.position.x + game->ball.width; x1++ ){
-        for( y1 = game->ball.position.y; y1 < game->ball.position.y + game->ball.height; y1++ ){
-            for( x2 = game->player.position.x; x2  < game->player.position.x + game->player.width; x2++ ){
-                for( y2 = game->player.position.y; y2 < game->player.position.y + game->player.height; y2++ ){
+    int PLAYER_LEFT_SIDE = player.position.x + (player.width / 6);
+    int PLAYER_RIGHT_SIDE = player.position.x + player.width - (player.width / 6);
+    Speed bounce_speed = { .x = 0, .y = 0 };
+
+    // checks left side
+    for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
+        for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
+            for( x2 = player.position.x; x2  < PLAYER_LEFT_SIDE; x2++ ){
+                for( y2 = player.position.y; y2 < player.position.y + player.height; y2++ ){
                     if( x1 == x2 && y1 == y2 ){
-                        return TRUE;
+                        bounce_speed.y = ball.speed.y * -1;
+                        bounce_speed.x = bounce_speed.y;
+                        return bounce_speed;
                     }
                 }
             }
         }
     }
-    return FALSE;
+    // checks right side
+    for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
+        for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
+            for( x2 = PLAYER_RIGHT_SIDE; x2  < player.position.x + player.width; x2++ ){
+                for( y2 = player.position.y; y2 < player.position.y + player.height; y2++ ){
+                    if( x1 == x2 && y1 == y2 ){
+                        bounce_speed.y = ball.speed.y * -1;
+                        bounce_speed.x = bounce_speed.y * -1;
+                        return bounce_speed;
+                    }
+                }
+            }
+        }
+    }
+    // checks center
+    for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
+        for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
+            for( x2 = PLAYER_LEFT_SIDE -1; x2  < PLAYER_RIGHT_SIDE; x2++ ){
+                for( y2 = player.position.y; y2 < player.position.y + player.height; y2++ ){
+                    if( x1 == x2 && y1 == y2 ){
+                        bounce_speed.y = ball.speed.y * -1;
+                        bounce_speed.x = 0;
+                        return bounce_speed;
+                    }
+                }
+            }
+        }
+    }
+    return bounce_speed;
 }
+
 
 int check_impact( Entity ball, Entity blocks[]){
  int i, x1, x2, y1, y2;
@@ -179,6 +215,7 @@ Game pseudo_game(){
     SCREEN_WIDTH = get_screen_width();
     SCREEN_HEIGHT = get_screen_height();
     Game aux;
+    Speed direction = {.x = 0, .y = 0};
 
 
     //bool leave = false;
@@ -220,11 +257,12 @@ Game pseudo_game(){
         }
 
         if( ticks_elapsed() - time_counter >= 1 ){
-            if( game->ball.position.y + game->ball.height > SCREEN_HEIGHT - 30 && hits_player(game->ball, game->player) ){
-                if( is_moving ){
-                    game->ball.speed.x = - game->player.speed.x;
+            if( game->ball.position.y + game->ball.height > SCREEN_HEIGHT - 30){
+                direction = hits_player(game->ball, game->player);
+                if(direction.x != 0 || direction.y != 0){
+                    game->ball.speed.y = direction.y;
+                    game->ball.speed.x = direction.x;
                 }
-                game->ball.speed.y = -game->ball.speed.y;
             }
             if( game->ball.position.x <= 27 || game->ball.position.x >= SCREEN_WIDTH - 27 ){
                 game->ball.speed.x = -game->ball.speed.x;
