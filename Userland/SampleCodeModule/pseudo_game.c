@@ -90,15 +90,17 @@ static void delete_entity( Entity entity ){
 
 static void update_ball(){
     delete_entity(game->ball);
-    game->ball.position = (Position){.x = game->ball.position.x + game->ball.speed.x,
-            .y = game->ball.position.y + game->ball.speed.y};
+    game->ball.position = (Position){
+                                     .x = game->ball.position.x + game->ball.speed.x,
+                                     .y = game->ball.position.y + game->ball.speed.y };
     draw_entity(game->ball);
 }
 
-static void update_player( int n){
+static void update_player(int n){
     delete_entity(game->player);
-    game->player.position = (Position){ .x = game->player.position.x + n,
-            .y = game->player.position.y};
+    game->player.position = (Position){
+                                        .x = game->player.position.x + n,
+                                        .y = game->player.position.y };
     draw_entity(game->player);
 }
 
@@ -172,6 +174,8 @@ int check_impact( Entity ball, Entity blocks[]){
     return FALSE;
 }
 
+/*********** Aracnoid *************/
+
 Game pseudo_game(){
     int ticks, time_counter, is_moving;
     char c;
@@ -222,15 +226,15 @@ Game pseudo_game(){
         if( ticks_elapsed() - time_counter >= 1 ){
             if( game->ball.position.y + game->ball.height > SCREEN_HEIGHT - 30 && hits_player(game->ball, game->player) ){
                 if( is_moving ){
-                    game->ball.speed.x = - game->player.speed.x;
+                    game->ball.speed.x =- game->player.speed.x;
                 }
-                game->ball.speed.y = -game->ball.speed.y;
+                game->ball.speed.y =- game->ball.speed.y;
             }
             if( game->ball.position.x <= 27 || game->ball.position.x >= SCREEN_WIDTH - 27 ){
-                game->ball.speed.x = -game->ball.speed.x;
+                game->ball.speed.x =- game->ball.speed.x;
             }
             if( game->ball.position.y <= 27 ){
-                game->ball.speed.y = -game->ball.speed.y;
+                game->ball.speed.y =- game->ball.speed.y;
             }
             if( game->ball.position.y > SCREEN_HEIGHT ){
                 game->game_over = TRUE;
