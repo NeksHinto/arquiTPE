@@ -3,3 +3,5 @@
 x64BareBonesImage.img
 x64BareBonesImage.qcow2
 x64BareBonesImage.vmdk
+x64BareBonesImage.*
+/Image
