@@ -272,13 +272,13 @@ Game pseudo_game(){
     start_time = get_seconds();
     while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P' && !game->game_over ){
         if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
-            game->player.speed.x = 20;
-            update_player(20);
+            game->player.speed.x = 30;
+            update_player(30);
             is_moving = TRUE;
         }
         else if( c == 'a' && game->player.position.x >= 20){
-            game->player.speed.x = -20;
-            update_player(-20);
+            game->player.speed.x = -30;
+            update_player(-30);
             is_moving = TRUE;
         }
 
@@ -299,6 +299,9 @@ Game pseudo_game(){
             }
             if( game->ball.position.y > SCREEN_HEIGHT ){
                 game->game_over = TRUE;
+            }
+            if( !is_moving ){
+                game->ball.speed.x == 0;
             }
             update_ball();
             draw_player();
