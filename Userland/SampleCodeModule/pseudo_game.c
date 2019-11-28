@@ -145,26 +145,30 @@ int hits_player( Entity ball, Entity player ){
 }
 
 int check_impact( Entity ball, Entity blocks[]){
-    int i, x1, x2, y1, y2;
-
+ int i, x1, x2, y1, y2;
     for( i = 0; i < MAX_BLOCKS; i++ ){
         if( blocks[i].visible ){
             for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
                 for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
                     for( x2 = blocks[i].position.x; x2 < blocks[i].position.x + blocks[i].width; x2++ ){
-                        for( y2 = blocks[i].position.y; y2 < blocks[i].position.y + blocks[i].height; y2++ ){
-                            if( x1 == x2 && y1 == y2 ){
-                                delete_entity(blocks[i]);
-                                blocks[i].visible = FALSE;
-                                return TRUE;
-                            }
+                        if( x2 == x1 && ( y1 == blocks[i].position.y || y1 == blocks[i].position.y + blocks[i].height )){
+                            delete_entity(blocks[i]);
+                            blocks[i].visible = FALSE;
+                            return TRUE;
+                        }
+                    }
+                    for( y2 = blocks[i].position.y; y2 < blocks[i].position.y + blocks[i].height; y2++ ){
+                        if( y2 == y1 && ( x1 == blocks[i].position.x || x1 == blocks[i].position.x + blocks[i].width ))
+                        {
+                            delete_entity(blocks[i]);
+                            blocks[i].visible = FALSE;
+                            return TRUE;
                         }
                     }
                 }
             }
         }
     }
-
     return FALSE;
 }
 
@@ -216,7 +220,7 @@ Game pseudo_game(){
         }
 
         if( ticks_elapsed() - time_counter >= 1 ){
-            if( hits_player(game->ball, game->player) ){
+            if( game->ball.position.y + game->ball.height > SCREEN_HEIGHT - 30 && hits_player(game->ball, game->player) ){
                 if( is_moving ){
                     game->ball.speed.x = - game->player.speed.x;
                 }
@@ -238,7 +242,7 @@ Game pseudo_game(){
             is_moving = FALSE;
         }
 
-        if( check_impact(game->ball, game->blocks) ){
+        if( game->ball.position.y <= 4 * SCREEN_HEIGHT / 6 && check_impact(game->ball, game->blocks) ){
             game->ball.speed.y = -game->ball.speed.y;
         }
     }
