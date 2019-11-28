@@ -1,5 +1,6 @@
 #include <video_module.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <sound_module.h>
 #include <time_module.h>
 #include <pseudo_game.h>
@@ -34,10 +35,10 @@ static int there_is_impact();
 static GameADT game;
 
 static void draw_borders_arc(Color color) {
-    write_block(0, 0, SCREEN_WIDTH, 10, color); // Top
-    //write_block(0, SCREEN_HEIGHT-10, SCREEN_WIDTH, 10, color); // Bottom
-    write_block(0, 0, 10, SCREEN_HEIGHT, color); // Left
-    write_block(SCREEN_WIDTH-10, 0, 10, SCREEN_HEIGHT, color); // Right
+    write_block(0, 0, SCREEN_WIDTH, BORDER_WIDTH, color); // Top screen
+    write_block(0, BORDER_Y_COORD, SCREEN_WIDTH, BORDER_WIDTH, color); // Top Game field
+    write_block(0, 0, BORDER_WIDTH, SCREEN_HEIGHT, color); // Left
+    write_block(SCREEN_WIDTH - BORDER_WIDTH, 0, BORDER_WIDTH, SCREEN_HEIGHT, color); // Right
 }
 
 static Game start_game(){
@@ -79,6 +80,14 @@ static void draw_game(){
     for( int i = 0; i < MAX_BLOCKS; i++ ){
         draw_entity(game->blocks[i]);
     }
+}
+
+static void draw_gameBoard(){
+    char time[9] = {'0','0', '.', '0', '0', '.', '0', '0', '\0'};
+
+    write_sized_string("TIME: ", 15, 15, white, black, 2, 15);
+    itoa(system_seconds(), 16, time + 6);
+    write_sized_string(time, 6 * 20, 15, white, black, 2, 15);
 }
 
 static void draw_entity( Entity entity ){
@@ -274,8 +283,9 @@ Game pseudo_game(){
             if( game->ball.position.x <= 27 || game->ball.position.x >= SCREEN_WIDTH - 27 ){
                 game->ball.speed.x =- game->ball.speed.x;
             }
-            if( game->ball.position.y <= 27 ){
-                game->ball.speed.y =- game->ball.speed.y;
+            if( game->ball.position.y <= BORDER_Y_COORD + 18 ){
+                game->ball.speed.y = -game->ball.speed.y;
+
             }
             if( game->ball.position.y > SCREEN_HEIGHT ){
                 game->game_over = TRUE;
@@ -283,6 +293,7 @@ Game pseudo_game(){
             update_ball();
             draw_player();
             draw_borders_arc(white);
+            draw_gameBoard();
             time_counter = ticks_elapsed();
             is_moving = FALSE;
         }

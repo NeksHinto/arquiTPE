@@ -38,6 +38,16 @@ void write_sized_char(char c, uint64_t x, uint64_t y, Color color, Color backgro
 	}
 }
 
+void write_sized_string(char* s, uint64_t x, uint64_t y, Color color, Color background, uint64_t size, uint64_t spacing){
+    int x_aux = x;
+    int y_aux = y;
+    while(*s != '\0'){
+        write_sized_char(*s, x_aux, y_aux, color, background, size);
+        s++;
+        x_aux += spacing + size;
+    }
+}
+
 void write_pixel(uint64_t x, uint64_t y, Color color ) {
 	_syscall(__write_pixel, x, y, color);
 }
