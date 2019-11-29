@@ -84,6 +84,10 @@ static void draw_game(){
 
 static void draw_gameBoard(){
     char time[9] = {'0','0', '.', '0', '0', '.', '0', '0', '\0'};
+    char score[8] = {'0', '0', '0', '0', '0', '0', '0', '\0'};
+    char aux[8];
+    int i, j, length = 0;
+
     real_time_played = get_seconds() - start_time;
     write_sized_string("TIME: ", 15, 15, white, black, 2, 15);
     itoa(real_time_played / 3600, 10, time + 0 );
@@ -108,6 +112,12 @@ static void draw_gameBoard(){
         time[6] = '0';
     }
     write_sized_string(time, 6 * 20, 15, white, black, 2, 15);
+    write_sized_string("POINTS: ", SCREEN_WIDTH - 285, 15, white, black, 2, 15);
+    itoa(game->score, 10, aux);
+    length = strlen(aux);
+    for(i = 7 - length, j = 0; game->score != 0 && i < 8; i++, j++)
+        score[i] = aux[j];
+    write_sized_string(score, SCREEN_WIDTH - 135, 15, white, black, 2, 15);
 }
 
 static void draw_entity( Entity entity ){
