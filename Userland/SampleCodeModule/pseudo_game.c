@@ -62,10 +62,9 @@ static void draw_game(){
     draw_player();
     draw_entity(game->ball);
     draw_gameBoard();
-    for(int i = 0; i < game->remaining_blocks; i++)
-        draw_entity(game->blocks[i]);
 
-    write_sized_string("ARACNOID",440, 15, white, black, 2, 15);
+    for(int i = 0; i < MAX_BLOCKS; i++)
+        draw_entity(game->blocks[i]);
 
 }
 
@@ -91,6 +90,7 @@ static void create_blocks(GameADT sGame){
 }
 
 static void draw_gameBoard(){
+    write_sized_string("ARACNOID",440, 15, white, black, 2, 15);
     char time[9] = {'0','0', '.', '0', '0', '.', '0', '0', '\0'};
     char score[8] = {'0', '0', '0', '0', '0', '0', '0', '\0'};
     char aux[8];
@@ -126,8 +126,6 @@ static void draw_gameBoard(){
     for(i = 7 - length, j = 0; game->score != 0 && i < 8; i++, j++)
         score[i] = aux[j];
     write_sized_string(score, SCREEN_WIDTH - 135, 15, white, black, 2, 15);
-
-
 }
 
 static void draw_entity( Entity entity ){
@@ -158,16 +156,16 @@ static void draw_player() {
     write_block(game->player.position.x, game->player.position.y, game->player.width, game->player.height, game->player.color);
 }
 
-static int there_is_impact(){
-    for( int i = 0; i < MAX_BLOCKS; i++ ){
-        if( game->ball.position.x >= (*(game->blocks + i)).position.x &&
-            game->ball.position.x < (*(game->blocks + i)).position.x + (*(game->blocks + i)).height &&
-            game->ball.position.y >= (*(game->blocks + i)).position.y &&
-            game->ball.position.y < (*(game->blocks + i)).position.y + (*(game->blocks + i)).width )
-            return TRUE;
-    }
-    return FALSE;
-}
+//static int there_is_impact(){
+//    for( int i = 0; i < MAX_BLOCKS; i++ ){
+//        if( game->ball.position.x >= (*(game->blocks + i)).position.x &&
+//            game->ball.position.x < (*(game->blocks + i)).position.x + (*(game->blocks + i)).height &&
+//            game->ball.position.y >= (*(game->blocks + i)).position.y &&
+//            game->ball.position.y < (*(game->blocks + i)).position.y + (*(game->blocks + i)).width )
+//            return TRUE;
+//    }
+//    return FALSE;
+//}
 
 int get_seconds() {
     char hours[3];
@@ -232,19 +230,20 @@ Speed hits_player( Entity ball, Entity player ){
 }
 
 
-int check_impact( Entity ball, Entity blocks[]){
+int check_impact(Entity ball, Entity blocks[]){
  int i, x1, x2, y1, y2;
 
-    for( i = 0; i < MAX_BLOCKS; i++ ){
-        if( blocks[i].visible ){
+    for( i = 0; i < game->remaining_blocks; i++ ){
+        if(blocks[i].visible){
             for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
                 for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
-                    if( x1 >= blocks[i].position.x && x1 < blocks[i].position.x + blocks[i].width &&
+                    if( x1 >= blocks[i].position.x + 1 && x1 < blocks[i].position.x - 1 + blocks[i].width &&
                         y1 >= blocks[i].position.y && y1 < blocks[i].position.y + blocks[i].height ){
-                        delete_entity(blocks[i]);
-                        blocks[i].visible = FALSE;
-                        game->score += 10;
-                        return TRUE;
+                            delete_entity(blocks[i]);
+                            blocks[i].visible = FALSE;
+                            game->remaining_blocks--;
+                            game->score += 10;
+                            return TRUE;
                     }
                 }
             }
@@ -263,7 +262,6 @@ Game pseudo_game(){
     SCREEN_HEIGHT = get_screen_height();
     Game aux;
     Speed direction = {.x = 0, .y = 0};
-
     aux = start_game();
     game = &aux;
     draw_game();
@@ -311,8 +309,9 @@ Game pseudo_game(){
             is_moving = FALSE;
         }
 
-        if( game->ball.position.y <= 4 * SCREEN_HEIGHT / 6 && check_impact(game->ball, game->blocks) ){
-            game->ball.speed.y = -game->ball.speed.y;
+        if( game->ball.position.y <= SCREEN_HEIGHT / 2 && check_impact(game->ball, game->blocks) ){
+            game->ball.speed.y *= -1;
+            wait(2);
         }
     }
 
