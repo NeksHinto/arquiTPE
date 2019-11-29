@@ -31,6 +31,8 @@ static void draw_entity(Entity entity);
 static void update_ball();
 static void update_player();
 static int there_is_impact();
+static void create_blocks();
+static void draw_gameBoard();
 
 static GameADT game;
 
@@ -46,24 +48,24 @@ static Game start_game(){
                                 .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 20, 60, TRUE, green},
                                 .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -20}, 10, 10, TRUE, yellow},
                                 .blocks = {
-                                            { {.x = SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                            { {.x = SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-                                            { {.x = SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet},
-                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+//                                            { {.x = SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+//                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+//                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet},
+//                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+//                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+//                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+//                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
+//                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
+//                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
                                           },
                                 .game_over = FALSE,
                                 .remaining_blocks = MAX_BLOCKS,
@@ -77,8 +79,28 @@ static void draw_game(){
     draw_borders_arc(white);
     draw_player();
     draw_entity(game->ball);
-    for( int i = 0; i < MAX_BLOCKS; i++ ){
-        draw_entity(game->blocks[i]);
+    draw_gameBoard();
+    create_blocks();
+
+}
+
+static void create_blocks(){
+    int x = BORDER_WIDTH + 2;
+    int y = BORDER_Y_COORD + 10;
+    int i, j, k;
+    int horizontal_blocks = (SCREEN_WIDTH  - (2 * BORDER_WIDTH)) / BLOCK_WIDTH;
+    int vertical_blocks = 5;
+    Color color[2] = {red, violet};
+
+    for(i = 0, k = 0; i < vertical_blocks; i++, k++){
+        for(j = 0; j < horizontal_blocks; j++, k++){
+            Entity block = { .position = {.x = x, .y = y }, .speed = {.x = 0, .y = 0}, BLOCK_HEIGHT, BLOCK_WIDTH, TRUE, color[i%2] };
+            game->blocks[k] = block;
+            draw_entity(game->blocks[k]);
+            x += BLOCK_WIDTH + 1;
+        }
+        y += BLOCK_HEIGHT + 1;
+        x = BORDER_WIDTH + 2;
     }
 }
 

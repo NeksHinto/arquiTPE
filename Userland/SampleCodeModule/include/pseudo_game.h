@@ -7,6 +7,8 @@
 #define NULL            0
 #define BORDER_Y_COORD  50
 #define BORDER_WIDTH    10
+#define BLOCK_HEIGHT    30
+#define BLOCK_WIDTH     49
 
 typedef struct Position {
     int x,y;
