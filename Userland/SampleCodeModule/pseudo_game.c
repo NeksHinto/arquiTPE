@@ -243,11 +243,13 @@ int check_impact( Entity ball, Entity blocks[]){
     return FALSE;
 }
 
+
 /*********** Aracnoid *************/
 
 Game pseudo_game(){
-    int ticks, time_counter, is_moving;
+    int ticks, time_counter, is_moving, paused_game;
     char c;
+    paused_game = FALSE;
     is_moving = FALSE;
     SCREEN_WIDTH = get_screen_width();
     SCREEN_HEIGHT = get_screen_height();
@@ -280,7 +282,7 @@ Game pseudo_game(){
 
     time_counter = ticks_elapsed();
     start_time = get_seconds();
-    while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P' && !game->game_over ){
+    while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P'){
         if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
             game->player.speed.x = 30;
             update_player(30);
@@ -321,15 +323,29 @@ Game pseudo_game(){
             is_moving = FALSE;
         }
 
+        while(game->game_over){
+            write_sized_string("GAME OVER", 40, 500, white, black, 10, 100);
+            write_sized_string("PRESS [SPACE] TO PLAY AGAIN OR [X] TO EXIT", 150, 650, white, black, 2, 15);
+            if((c=getchar())==' '){
+                game->game_over=FALSE;
+                aux = start_game();
+                game = &aux;
+                score = 0;
+                start_game();
+                draw_game();
+                start_time = get_seconds();
+                draw_gameBoard();
+            }
+        }
+
         if( game->ball.position.y <= 4 * SCREEN_HEIGHT / 6 && check_impact(game->ball, game->blocks) ){
             game->ball.speed.y = -game->ball.speed.y;
         }
     }
 
-    if( c == 'p' || c == 'P' ){
-        return aux;
-    }
-
-    game->game_over = TRUE;
-    return aux;
+    // if( c == 'p' || c == 'P' ){
+    //     return aux;
+    // }
+    // game->game_over = TRUE;
+    // return aux;
 }
