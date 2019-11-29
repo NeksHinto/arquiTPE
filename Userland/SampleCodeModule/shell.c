@@ -179,8 +179,8 @@ static void clear_buffer() {
 
 static void command_dispatcher(char *buffer) {
   int i,j;
-	 char command[MAX_SIZE] = {0};
-	 char parameter[MAX_SIZE] = {0};
+	char command[MAX_SIZE] = {0};
+	char parameter[MAX_SIZE] = {0};
 	int reading_command = 1;
 	for(i = 0, j = 0; buffer[i] != 0 && i < MAX_SIZE - 1 && j < MAX_SIZE - 1; i++){
 		if(buffer[i] == ' ' && reading_command){
@@ -264,13 +264,12 @@ static void command_dispatcher(char *buffer) {
     return;
   }
 
-
-    if(strcmp(command, "aracnoid")) {
-        clear_screen();
-        pseudo_game();
-        clear_screen();
-        return;
-    }
+  if(strcmp(command, "aracnoid")) {
+      clear_screen();
+      pseudo_game();
+      clear_screen();
+      return;
+  }
   
   send_error("Unrecognized command.");
 }

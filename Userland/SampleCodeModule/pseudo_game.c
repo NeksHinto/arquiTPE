@@ -233,14 +233,6 @@ int check_impact( Entity ball, Entity blocks[]){
     return FALSE;
 }
 
-void pause_game(Game * game){
-
-    game->ball.speed.y=0;
-    game->ball.speed.x=0;
-    game->player.speed.y=0;
-    game->player.speed.x=0;
-
-}
 
 /*********** Aracnoid *************/
 
@@ -280,7 +272,7 @@ Game pseudo_game(){
 
     time_counter = ticks_elapsed();
     start_time = get_seconds();
-    while((c = getchar()) != 'x' && c != 'X'){
+    while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P'){
         if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
             game->player.speed.x = 30;
             update_player(30);
@@ -321,18 +313,18 @@ Game pseudo_game(){
             is_moving = FALSE;
         }
 
-        if(game->game_over){
+        while(game->game_over){
             write_sized_string("GAME OVER", 40, 500, white, black, 10, 100);
             write_sized_string("PRESS [SPACE] TO PLAY AGAIN OR [X] TO EXIT", 150, 650, white, black, 2, 15);
-        }
-
-        if( !paused_game && (c == 'p' || c == 'P') ){
-            paused_game=TRUE;
-            pause_game(game);
-            write_sized_string("PAUSED GAME", 30, 500, white, black, 8, 80);
-            write_sized_string("PRESS [P] TO RESUME", 350, 650, white, black, 2, 15);
-            if(paused_game && (c == 'p' || c == 'P') ){
-                paused_game=FALSE;
+            if((c=getchar())==' '){
+                game->game_over=FALSE;
+                aux = start_game();
+                game = &aux;
+                score = 0;
+                start_game();
+                draw_game();
+                start_time = get_seconds();
+                draw_gameBoard();
             }
         }
 
