@@ -31,7 +31,7 @@ static void draw_entity(Entity entity);
 static void update_ball();
 static void update_player();
 static int there_is_impact();
-static void create_blocks();
+static void create_blocks(GameADT sGame);
 static void draw_gameBoard();
 
 static GameADT game;
@@ -45,32 +45,14 @@ static void draw_borders_arc(Color color) {
 
 static Game start_game(){
     Game game_started = (Game){
-                                .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, 20, 60, TRUE, green},
+                                .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, PLAYER_HEIGHT, PLAYER_WIDTH, TRUE, green},
                                 .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -20}, 10, 10, TRUE, yellow},
-                                .blocks = {
-//                                            { {.x = SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-//                                            { {.x = SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-//                                            { {.x = SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-//                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-//                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-//                                            { {.x = 2 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-//                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-//                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet},
-//                                            { {.x = 3 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-//                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-//                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-//                                            { {.x = 5 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-//                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-//                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-//                                            { {.x = 6 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-//                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-//                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = 2 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, violet },
-//                                            { {.x = 7 * SCREEN_WIDTH/8 - 30, .y = 3 * SCREEN_HEIGHT/6 - 15 }, {.x = 0, .y = 0}, 30, 60, TRUE, red },
-                                          },
+                                //.blocks = {},
                                 .game_over = FALSE,
                                 .remaining_blocks = MAX_BLOCKS,
                                 .score = 0,
     };
+    create_blocks(&game_started);
     return game_started;
 }
 
@@ -80,28 +62,32 @@ static void draw_game(){
     draw_player();
     draw_entity(game->ball);
     draw_gameBoard();
-    create_blocks();
+    for(int i = 0; i < game->remaining_blocks; i++)
+        draw_entity(game->blocks[i]);
+
+    write_sized_string("ARACNOID",440, 15, white, black, 2, 15);
 
 }
 
-static void create_blocks(){
-    int x = BORDER_WIDTH + 2;
-    int y = BORDER_Y_COORD + 10;
+static void create_blocks(GameADT sGame){
+    int xi = BORDER_WIDTH + 2;
+    int yi = BORDER_Y_COORD + 10;
     int i, j, k;
-    int horizontal_blocks = (SCREEN_WIDTH  - (2 * BORDER_WIDTH)) / BLOCK_WIDTH;
+    int horizontal_blocks = (SCREEN_WIDTH - 4 - (2 * BORDER_WIDTH)) / BLOCK_WIDTH;
     int vertical_blocks = 5;
+    int qBlocks = horizontal_blocks * vertical_blocks;
     Color color[2] = {red, violet};
 
-    for(i = 0, k = 0; i < vertical_blocks; i++, k++){
-        for(j = 0; j < horizontal_blocks; j++, k++){
-            Entity block = { .position = {.x = x, .y = y }, .speed = {.x = 0, .y = 0}, BLOCK_HEIGHT, BLOCK_WIDTH, TRUE, color[i%2] };
-            game->blocks[k] = block;
-            draw_entity(game->blocks[k]);
-            x += BLOCK_WIDTH + 1;
+    for(i = 0, k = 0; i < vertical_blocks; i++){
+        for(j = 0;j < horizontal_blocks; j++){
+            Entity block = { .position = {.x = xi, .y = yi}, .speed = {.x = 0, .y = 0}, BLOCK_HEIGHT, BLOCK_WIDTH, TRUE, color[i%2] };
+            sGame->blocks[k++] = block;
+            xi += BLOCK_WIDTH + 1;
         }
-        y += BLOCK_HEIGHT + 1;
-        x = BORDER_WIDTH + 2;
+        yi += BLOCK_HEIGHT + 1;
+        xi = BORDER_WIDTH + 2;
     }
+    sGame->remaining_blocks = qBlocks;
 }
 
 static void draw_gameBoard(){
@@ -140,6 +126,8 @@ static void draw_gameBoard(){
     for(i = 7 - length, j = 0; game->score != 0 && i < 8; i++, j++)
         score[i] = aux[j];
     write_sized_string(score, SCREEN_WIDTH - 135, 15, white, black, 2, 15);
+
+
 }
 
 static void draw_entity( Entity entity ){
@@ -276,28 +264,8 @@ Game pseudo_game(){
     Game aux;
     Speed direction = {.x = 0, .y = 0};
 
-
-    //bool leave = false;
-    //int currentGameTick = 0, previusGameTick =0;
-
-//    do{
-//        currentGameTick = getTicks();
-//
-//        ParseInput();
-//
-//        if((currentGameTick % 1) == 0 && currentGameTick != previusGameTick){
-//            previusGameTick = currentGameTick;
-//
-//            runGame();
-//
-//        }
-//
-//    }while (!leave);
-
     aux = start_game();
     game = &aux;
-    score = 0;
-    start_game();
     draw_game();
 
     time_counter = ticks_elapsed();
