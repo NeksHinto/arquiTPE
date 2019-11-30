@@ -321,9 +321,9 @@ Game pseudo_game(Game aracnoid){
     }
 
     if( c == ESC ){
-        return aux;
+        return *game;
     }
 
     game->game_over = TRUE;
-    return aux;
+    return *game;
 }
