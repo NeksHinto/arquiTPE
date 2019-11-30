@@ -2,7 +2,7 @@
     #define PSEUDO_GAME_H
 
 #define FALSE           0
-#define MAX_BLOCKS      200
+#define MAX_BLOCKS      50
 #define TRUE            !FALSE
 #define NULL            0
 #define BORDER_Y_COORD  50
@@ -38,7 +38,7 @@ typedef struct Game {
 
 typedef Game* GameADT;
 
-Game  pseudo_game();
+Game pseudo_game(Game aracnoid);
 
 
 #endif

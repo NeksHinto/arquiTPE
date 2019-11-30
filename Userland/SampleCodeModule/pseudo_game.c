@@ -5,6 +5,8 @@
 #include <time_module.h>
 #include <pseudo_game.h>
 
+#define ESC 27
+
 static int SCREEN_WIDTH;
 static int SCREEN_HEIGHT;
 
@@ -63,13 +65,15 @@ static void draw_game(){
     draw_entity(game->ball);
     draw_gameBoard();
 
-    for(int i = 0; i < MAX_BLOCKS; i++)
-        draw_entity(game->blocks[i]);
+    for(int i = 0; i < MAX_BLOCKS; i++){
+        if(game->blocks[i].visible)
+            draw_entity(game->blocks[i]);
+    }
 
 }
 
 static void create_blocks(GameADT sGame){
-    int xi = BORDER_WIDTH + 2;
+    int xi = BORDER_WIDTH + 8;
     int yi = BORDER_Y_COORD + 10;
     int i, j, k;
     int horizontal_blocks = (SCREEN_WIDTH - 4 - (2 * BORDER_WIDTH)) / BLOCK_WIDTH;
@@ -84,7 +88,7 @@ static void create_blocks(GameADT sGame){
             xi += BLOCK_WIDTH + 1;
         }
         yi += BLOCK_HEIGHT + 1;
-        xi = BORDER_WIDTH + 2;
+        xi = BORDER_WIDTH + 8;
     }
     sGame->remaining_blocks = qBlocks;
 }
@@ -156,17 +160,6 @@ static void draw_player() {
     write_block(game->player.position.x, game->player.position.y, game->player.width, game->player.height, game->player.color);
 }
 
-//static int there_is_impact(){
-//    for( int i = 0; i < MAX_BLOCKS; i++ ){
-//        if( game->ball.position.x >= (*(game->blocks + i)).position.x &&
-//            game->ball.position.x < (*(game->blocks + i)).position.x + (*(game->blocks + i)).height &&
-//            game->ball.position.y >= (*(game->blocks + i)).position.y &&
-//            game->ball.position.y < (*(game->blocks + i)).position.y + (*(game->blocks + i)).width )
-//            return TRUE;
-//    }
-//    return FALSE;
-//}
-
 int get_seconds() {
     char hours[3];
     itoa(system_hours(), 16, hours);
@@ -232,8 +225,9 @@ Speed hits_player( Entity ball, Entity player ){
 
 int check_impact(Entity ball, Entity blocks[]){
  int i, x1, x2, y1, y2;
+ int impact = FALSE;
 
-    for( i = 0; i < game->remaining_blocks; i++ ){
+    for( i = 0; i < MAX_BLOCKS; i++ ){
         if(blocks[i].visible){
             for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
                 for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
@@ -242,19 +236,19 @@ int check_impact(Entity ball, Entity blocks[]){
                             delete_entity(blocks[i]);
                             blocks[i].visible = FALSE;
                             game->remaining_blocks--;
-                            game->score += 10;
-                            return TRUE;
+                            game->score += 100;
+                            impact = TRUE;
                     }
                 }
             }
         }
     }
-    return FALSE;
+    return impact;
 }
 
 /*********** Aracnoid *************/
 
-Game pseudo_game(){
+Game pseudo_game(Game aracnoid){
     int ticks, time_counter, is_moving;
     char c;
     is_moving = FALSE;
@@ -262,19 +256,25 @@ Game pseudo_game(){
     SCREEN_HEIGHT = get_screen_height();
     Game aux;
     Speed direction = {.x = 0, .y = 0};
-    aux = start_game();
-    game = &aux;
+
+    game = &aracnoid;
+
+    if(game->game_over){
+        aux = start_game();
+        game = &aux;
+    }
+
     draw_game();
 
     time_counter = ticks_elapsed();
     start_time = get_seconds();
-    while((c = getchar()) != 'x' && c != 'X' && c != 'p' && c != 'P' && !game->game_over ){
-        if( c == 'd' && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
+    while((c = getchar()) != 'x' && c != 'X' && c != ESC && !game->game_over ){
+        if( (c == 'd' || c == 'D') && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
             game->player.speed.x = 30;
             update_player(30);
             is_moving = TRUE;
         }
-        else if( c == 'a' && game->player.position.x >= 20){
+        else if( (c == 'a' || c == 'A') && game->player.position.x >= 20){
             game->player.speed.x = -30;
             update_player(-30);
             is_moving = TRUE;
@@ -308,14 +308,19 @@ Game pseudo_game(){
             time_counter = ticks_elapsed();
             is_moving = FALSE;
         }
-
-        if( game->ball.position.y <= SCREEN_HEIGHT / 2 && check_impact(game->ball, game->blocks) ){
+        /** VEMOS QUE ONDA */
+        for(int i = 0; i < MAX_BLOCKS; i++){
+            if(game->blocks[i].visible){
+                draw_entity(game->blocks[i]);
+            }
+        }
+        if( check_impact(game->ball, game->blocks) ){
             game->ball.speed.y *= -1;
-            wait(2);
+            wait(1);
         }
     }
 
-    if( c == 'p' || c == 'P' ){
+    if( c == ESC ){
         return aux;
     }
 

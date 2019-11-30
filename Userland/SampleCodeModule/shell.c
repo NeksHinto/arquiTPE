@@ -8,8 +8,6 @@
 #include <stdlib.h>
 #include <error_handler.h>
 #include <exception_tester.h>
-//#include <pong.h>
-//#include <snake.h>
 #include <pseudo_game.h>
 
 #define HORIZONTAL_MARGIN 2
@@ -17,7 +15,7 @@
 #define STDOUT 1
 #define STDERR 2
 #define MAX_SIZE 255
-
+#define ESC 27
 
 static const Color BLACK = {0, 0, 0};
 static const Color RED = {255, 0, 0};
@@ -36,6 +34,8 @@ static int buffer_index = 0;
 
 static int line_y_value=VERTICAL_MARGIN;
 static int line_x_value=HORIZONTAL_MARGIN;
+
+static Game aracnoid = {.game_over = TRUE};
 
 
 
@@ -86,7 +86,7 @@ void refresh_stdin(){
   buffer_index=0;
   write_tag();
   char c;
-  while((c = getchar()) != '\n'){
+  while((c = getchar()) != '\n' && c != ESC){
     if(c=='\b'){
       if(buffer_index!=0){
         if(line_x_value <= HORIZONTAL_MARGIN){
@@ -108,9 +108,18 @@ void refresh_stdin(){
       line_x_value++;
     }
   }
-  new_line();
-  command_dispatcher(buffer);
-  clear_buffer();
+  if(c == ESC){
+      clear_screen();
+      aracnoid = pseudo_game(aracnoid);
+      clear_screen();
+      clear_buffer();
+  }
+  else{
+      new_line();
+      command_dispatcher(buffer);
+      clear_buffer();
+  }
+
 }
 
 static void refresh_buffer(int buffer) {
@@ -264,11 +273,12 @@ static void command_dispatcher(char *buffer) {
     return;
   }
 
-
     if(strcmp(command, "aracnoid")) {
+        aracnoid.game_over = TRUE;
         clear_screen();
-        pseudo_game();
+        aracnoid = pseudo_game(aracnoid);
         clear_screen();
+
         return;
     }
   
