@@ -225,24 +225,26 @@ Speed hits_player( Entity ball, Entity player ){
 
 int check_impact(Entity ball, Entity blocks[]){
  int i, x1, x2, y1, y2;
+ int ans = FALSE;
 
     for( i = 0; i < MAX_BLOCKS; i++ ){
         if(blocks[i].visible){
             for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
                 for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
                     if( x1 >= blocks[i].position.x + 1 && x1 < blocks[i].position.x - 1 + blocks[i].width &&
-                        y1 >= blocks[i].position.y && y1 < blocks[i].position.y + blocks[i].height ){
+                        y1 >= blocks[i].position.y && y1 < blocks[i].position.y + blocks[i].height
+                        && blocks[i].visible ){
                             delete_entity(blocks[i]);
-                            blocks[i].visible = FALSE;
+                            blocks[i].visible = !blocks[i].visible;
                             game->remaining_blocks--;
                             game->score += 100;
-                            return TRUE;
+                            ans = TRUE;
                     }
                 }
             }
         }
     }
-    return FALSE;
+    return ans;
 }
 
 /*********** Aracnoid *************/
