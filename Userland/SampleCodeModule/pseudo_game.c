@@ -225,7 +225,6 @@ Speed hits_player( Entity ball, Entity player ){
 
 int check_impact(Entity ball, Entity blocks[]){
  int i, x1, x2, y1, y2;
- int impact = FALSE;
 
     for( i = 0; i < MAX_BLOCKS; i++ ){
         if(blocks[i].visible){
@@ -237,13 +236,13 @@ int check_impact(Entity ball, Entity blocks[]){
                             blocks[i].visible = FALSE;
                             game->remaining_blocks--;
                             game->score += 100;
-                            impact = TRUE;
+                            return TRUE;
                     }
                 }
             }
         }
     }
-    return impact;
+    return FALSE;
 }
 
 /*********** Aracnoid *************/
