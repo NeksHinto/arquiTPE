@@ -49,10 +49,10 @@ static Game start_game(){
     Game game_started = (Game){
                                 .player = { {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, PLAYER_HEIGHT, PLAYER_WIDTH, TRUE, green},
                                 .ball = { {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -20}, 10, 10, TRUE, yellow},
-                                //.blocks = {},
                                 .game_over = FALSE,
                                 .remaining_blocks = MAX_BLOCKS,
                                 .score = 0,
+                                .game_speed = 7,
     };
     create_blocks(&game_started);
     return game_started;
@@ -280,7 +280,7 @@ Game pseudo_game(Game aracnoid){
             is_moving = TRUE;
         }
 
-        if( ticks_elapsed() - time_counter >= 1 ){
+        if( ticks_elapsed() - time_counter >= game->game_speed ){
             if( game->ball.position.y + game->ball.height > SCREEN_HEIGHT - 30){
                 direction = hits_player(game->ball, game->player);
                 if(direction.x != 0 || direction.y != 0){
@@ -317,6 +317,11 @@ Game pseudo_game(Game aracnoid){
         if( check_impact(game->ball, game->blocks) ){
             game->ball.speed.y *= -1;
             wait(1);
+        }
+
+        if( (get_seconds() - start_time )% 15 == 0 && get_seconds() - start_time > 0 && game->game_speed > 2 ){
+            game->game_speed -= 1;
+            beep(20);
         }
     }
 
