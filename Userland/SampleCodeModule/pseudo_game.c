@@ -252,6 +252,7 @@ int check_impact(Entity ball, Entity blocks[]){
 Game pseudo_game(Game aracnoid){
     int ticks, time_counter, is_moving;
     char c;
+    char aux_string[8];
     is_moving = FALSE;
     SCREEN_WIDTH = get_screen_width();
     SCREEN_HEIGHT = get_screen_height();
@@ -327,6 +328,9 @@ Game pseudo_game(Game aracnoid){
         }
 
         while(game->game_over){
+            write_sized_string("Score: ", 150, 350, white, black, 4, 30);
+            itoa(game->score, 10, aux_string );
+            write_sized_string(aux_string, 400, 350, white, black, 4, 30 );
             write_sized_string("GAME OVER", 40, 500, white, black, 10, 100);
             write_sized_string("PRESS [SPACE] TO PLAY AGAIN OR [X] TO EXIT", 150, 650, white, black, 2, 15);
             if((c=getchar())==' '){
