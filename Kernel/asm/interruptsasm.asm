@@ -79,19 +79,24 @@ SECTION .text
 %endmacro
 
 %macro exceptionHandler 1
-	mov rsi,[rsp] ; dirección donde ocurrió la excepción.
 	pushState
 
-	mov rdi, %1 ; pasaje de parametro
-	mov rdx, rsp; pointer al stack donde estan pusheados los registros.
-	call exceptionDispatcher
-	popState
+    	;rdi rsi rdx rcx r8 r9
 
-	mov rdi, [instructionPointerBackup]
-	mov qword [rsp], rdi; dirección del sampleCodeModule para retornar de vuelta.
-	mov rdi, [stackPointerBackup]
-	mov qword[rsp + 3*8], rdi
-	iretq
+
+    	mov rdi, %1 ; pasaje de parametro
+    	mov rsi, rsp
+    	mov rdx, [rsp+(15*8)]
+
+
+    	call exceptionDispatcher
+
+    	mov qword [rsp+15*8],0x400000
+
+
+    	popState
+
+    	iretq
 
 %endmacro
 
