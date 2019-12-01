@@ -232,7 +232,8 @@ int check_impact(Entity ball, Entity blocks[]){
             for( x1 = ball.position.x; x1 < ball.position.x + ball.width; x1++ ){
                 for( y1 = ball.position.y; y1 < ball.position.y + ball.height; y1++ ){
                     if( x1 >= blocks[i].position.x + 1 && x1 < blocks[i].position.x - 1 + blocks[i].width &&
-                        y1 >= blocks[i].position.y && y1 < blocks[i].position.y + blocks[i].height ){
+                        y1 >= blocks[i].position.y && y1 < blocks[i].position.y + blocks[i].height &&
+                        blocks[i].visible ){
                             delete_entity(blocks[i]);
                             blocks[i].visible = FALSE;
                             game->remaining_blocks--;
