@@ -188,6 +188,7 @@ static void clear_buffer() {
 
 static void command_dispatcher(char *buffer) {
   int i,j;
+
 	char command[MAX_SIZE] = {0};
 	char parameter[MAX_SIZE] = {0};
 	int reading_command = 1;
@@ -272,15 +273,57 @@ static void command_dispatcher(char *buffer) {
     _invalid_op_code();
     return;
   }
+  if(strcmp(command, "aracnoid")) {
+      aracnoid.game_over = TRUE;
+      clear_screen();
+      aracnoid = pseudo_game(aracnoid);
+      clear_screen();
+      return;
+  }
+  if(strcmp(command, "printMem")){
+      char *str = "123456789 HELLO WORLD 123456789A";
+      struct  s {
+          int nums[6];
+          char c1;
+          char c2;
+          char c3;
+          char c4;
+          char c5;
+          char c6;
+          char c7;
+          char c8;
 
-    if(strcmp(command, "aracnoid")) {
-        aracnoid.game_over = TRUE;
-        clear_screen();
-        aracnoid = pseudo_game(aracnoid);
-        clear_screen();
+      }s;
+      for(int i = 0; i < 27; i++)
+          s.nums[i] = i+1;
+      s.c1 = 'H';
+      s.c2 = 'E';
+      s.c3 = 'L';
+      s.c4 = 'L';
+      s.c5 = 'O';
+      s.c6 = '!';
+      s.c7 = '!';
+      s.c8 = '!';
+      clear_screen();
+      printf("\n############################################################\n");
+      printf("#              THIS IS A MEMORY DUMP TEST                  #");
+      printf("\n############################################################\n\n");
 
-        return;
-    }
+      printf("str = %d --> \"123456789 HELLO WORLD 123456789A\"\n\n", str);
+      printMem(str);
+      printf("\n############################################################\n\n");
+      printf("&struct = %d --> \"\n{\n", &s);
+      printf("\t\t\tint nums[6] = { 1 2 3 4 5 6 }\n");
+      printf("\t\t\tchar c1 = 'H'\n");
+      printf("\t\t\tchar c2 = 'E'\n");
+      printf("\t\t\tchar c3 = 'L'\n");
+      printf("\t\t\tchar c4 = 'L'\n");
+      printf("\t\t\tchar c5 = 'O'\n}\"\n");
+
+      printMem(&s);
+      printf("\n############################################################\n\n");
+      return;
+  }
   send_error("Unrecognized command.");
 }
 
@@ -295,7 +338,8 @@ static void help() {
     printf("\tdiv0 -- Tests division by zero exception.\n");
     printf("\tinvOp -- Tests invalid op code exception.\n");
     printf("\ttime -- Shows the current system time.\n");
-    printf("\taracnoid -- Opens the aracnoid game.\n\t\tPress [SPACE] to start.\n\t\tPlayer1 moves with [W] and [S] and Player2 with [O] and [L].\n\t\tPress [X] to exit.\n");
+    printf("\taracnoid -- Opens the aracnoid game.\n\t\tPlayer moves with [W] and [S]\n\t\tPress [X] to exit or [ESC] to pause game.\n");
+    printf("\tprintMem -- Makes a memory dump of the first 32 bytes from the given address\n");
 
 }
 

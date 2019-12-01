@@ -5,6 +5,7 @@
 #define _stdout 1
 #define _stderr 2
 
+void printMem(void *addr);
 void printf(char* format, ...);
 int scanf(char* format, ...);
 void putchar(char c);
