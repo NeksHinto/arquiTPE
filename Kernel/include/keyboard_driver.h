@@ -13,7 +13,7 @@
 #define RIGHT_SHIFT_RELEASE 0
 
 #define ALT_GR 0
-#define ESC 0
+#define ESC 27
 #define CTRL 0
 #define ALT 0
 #define LEFT 0
