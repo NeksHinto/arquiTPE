@@ -338,7 +338,7 @@ static void help() {
     printf("\tdiv0 -- Tests division by zero exception.\n");
     printf("\tinvOp -- Tests invalid op code exception.\n");
     printf("\ttime -- Shows the current system time.\n");
-    printf("\taracnoid -- Opens the aracnoid game.\n\t\tPlayer moves with [W] and [S]\n\t\tPress [X] to exit or [ESC] to pause game.\n");
+    printf("\taracnoid -- Opens the aracnoid game.\n\t\tPlayer moves with [A] and [D]\n\t\tPress [X] to exit or [ESC] to pause game.\n");
     printf("\tprintMem -- Makes a memory dump of the first 32 bytes from the given address\n");
 
 }
