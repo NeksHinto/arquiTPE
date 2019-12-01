@@ -225,6 +225,7 @@ Speed hits_player( Entity ball, Entity player ){
 
 int check_impact(Entity ball, Entity blocks[]){
  int i, x1, x2, y1, y2;
+ int impact = FALSE;
 
     for( i = 0; i < MAX_BLOCKS; i++ ){
         if(blocks[i].visible){
@@ -237,13 +238,13 @@ int check_impact(Entity ball, Entity blocks[]){
                             blocks[i].visible = FALSE;
                             game->remaining_blocks--;
                             game->score += 100;
-                            return TRUE;
+                            impact = TRUE;
                     }
                 }
             }
         }
     }
-    return FALSE;
+    return impact;
 }
 
 
@@ -321,9 +322,9 @@ Game pseudo_game(Game aracnoid){
             wait(1);
         }
 
-        if( (get_seconds() - start_time )% 15 == 0 && get_seconds() - start_time > 0 && game->game_speed > 1 ){
+        if( (get_seconds() - start_time ) % 15 == 0 && get_seconds() - start_time > 0 && game->game_speed > 1 ){
             game->game_speed -= 1;
-            beep(1);
+            beep(2);
         }
 
         while(game->game_over){
