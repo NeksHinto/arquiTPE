@@ -305,6 +305,10 @@ static void command_dispatcher(char *buffer) {
       s.c7 = '!';
       s.c8 = '!';
       clear_screen();
+      printf("\n############################################################\n");
+      printf("#              THIS IS A MEMORY DUMP TEST                  #");
+      printf("\n############################################################\n\n");
+
       printf("str = %d --> \"123456789 HELLO WORLD 123456789A\"\n\n", str);
       printMem(str);
       printf("\n############################################################\n\n");
