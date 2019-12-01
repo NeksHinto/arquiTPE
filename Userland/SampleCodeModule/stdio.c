@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+static void dumpMem(void *addr, int len);
+
 void putchar(char c){
   _syscall(__write_char_buffer, 1, c);
 }
@@ -30,25 +32,27 @@ void printf(char* format, ...){
     if(*format == '%'){
       format++;
       switch(*format){
-            case 'c' :
-              i = va_arg(arg,int);
+          case 'c' :
+              i = va_arg(arg, int);
               putchar(i);
               break;
 
-            case 'd' :
-              i = va_arg(arg,int);
+          case 'd' :
+              i = va_arg(arg, int);
               putint(i, 10);
-             break;
+              break;
 
-            case 's':
-              s = va_arg(arg,char*);
+          case 's':
+              s = va_arg(arg, char*);
               while(*s){
-                putchar(*s);
-                s++;
+                  putchar(*s);
+                  s++;
               }
               break;
+
       }
-    }else{
+    }
+    else{
       putchar(*format);
     }
   }
@@ -101,3 +105,35 @@ int scanf(char* format, ...){
   }
   return valuesLoaded;
 }
+
+/** PRINT MEMORY */
+void printMem(void *addr){
+    dumpMem(addr, 32);
+}
+
+static void dumpMem(void *addr, int len){
+    int i;
+    unsigned char buff[17];
+    unsigned char *pc = (unsigned char*)addr;
+
+    printf ("Dumping %d bytes from %d:\n\n", len, addr);
+
+    for (i = 0; i < len; i++) {
+        if ((i % 16) == 0 && i != 0) {
+            printf("  %s\n", buff);
+        }
+        printf(" %d", pc[i]);
+        if ((pc[i] < 0x20) || (pc[i] > 0x7e)) {
+            buff[i % 16] = '.';
+        } else {
+            buff[i % 16] = pc[i];
+        }
+        buff[(i % 16) + 1] = '\0';
+    }
+    while ((i % 16) != 0) {
+        printf("   ");
+        i++;
+    }
+    printf("  %s\n", buff);
+}
+/*****************/

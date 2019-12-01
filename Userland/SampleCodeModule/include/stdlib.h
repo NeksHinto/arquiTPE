@@ -1,6 +1,8 @@
 #ifndef STDLIB_H
 #define STDLIB_H
 
+#define NULL 0
+
 // Compares two strings and returns 1 if they're equal.
 int strcmp( char * s1,  char* s2);
 //recieves an int and converts it to a char* using the given base.

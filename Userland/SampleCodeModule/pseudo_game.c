@@ -307,7 +307,7 @@ Game pseudo_game(Game aracnoid){
             time_counter = ticks_elapsed();
             is_moving = FALSE;
         }
-        /** VEMOS QUE ONDA */
+
         for(int i = 0; i < MAX_BLOCKS; i++){
             if(game->blocks[i].visible){
                 draw_entity(game->blocks[i]);
