@@ -321,7 +321,7 @@ Game pseudo_game(Game aracnoid){
 
         if( (get_seconds() - start_time )% 15 == 0 && get_seconds() - start_time > 0 && game->game_speed > 2 ){
             game->game_speed -= 1;
-            beep(2);
+            beep(5);
         }
     }
 
