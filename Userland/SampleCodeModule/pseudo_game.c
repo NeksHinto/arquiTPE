@@ -339,6 +339,10 @@ Game pseudo_game(Game aracnoid){
                 start_time = get_seconds();
                 draw_gameBoard();
             }
+
+            if( c == 'x' || c == 'X' ){
+                return *game;
+            }
         }
 
     }
