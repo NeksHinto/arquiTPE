@@ -10,10 +10,6 @@ GLOBAL _exception0Handler
 GLOBAL _exception6Handler
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
-GLOBAL _irq02Handler
-GLOBAL _irq03Handler
-GLOBAL _irq04Handler
-GLOBAL _irq05Handler
 
 GLOBAL getStackPointer
 GLOBAL _syscallHandler
@@ -28,6 +24,8 @@ EXTERN main
 
 SECTION .text
 
+; Backup regs macro
+; Stack all 64-bit regs
 %macro pushState 0
 	push rax
 	push rbx
@@ -46,6 +44,8 @@ SECTION .text
 	push r15
 %endmacro
 
+; Restore regs macro
+; Unstack all 64-bit regs
 %macro popState 0
 	pop r15
 	pop r14
@@ -64,14 +64,17 @@ SECTION .text
 	pop rax
 %endmacro
 
+; IRQ Handle Master macro
+; Receive IRQ-number as a parameter and call
+; the dispatcher to handle the interruption acordingly,
+; then send EOI signal.
 %macro irqHandlerMaster 1
 	pushState
 
-	mov rdi, %1 ; pasaje de parametro
+	mov rdi, %1           ; passing parameter
 	call irqDispatcher
 
-	; signal pic EOI (End of Interrupt)
-	mov al, 20h
+	mov al, 20h            ; signal pic EOI (End of Interrupt)
 	out 20h, al
 
 	popState
@@ -79,24 +82,19 @@ SECTION .text
 %endmacro
 
 %macro exceptionHandler 1
+	mov rsi,[rsp]       ; direction where the exception happened.
 	pushState
 
-    	;rdi rsi rdx rcx r8 r9
+	mov rdi, %1
+	mov rdx, rsp        ; ptr to stack where regs were pushed.
+	call exceptionDispatcher
+	popState
 
-
-    	mov rdi, %1 ; pasaje de parametro
-    	mov rsi, rsp
-    	mov rdx, [rsp+(15*8)]
-
-
-    	call exceptionDispatcher
-
-    	mov qword [rsp+15*8],0x400000
-
-
-    	popState
-
-    	iretq
+	mov rdi, [instructionPointerBackup]
+	mov qword [rsp], rdi ; dirección del sampleCodeModule para retornar de vuelta.
+	mov rdi, [stackPointerBackup]
+	mov qword[rsp + 3*8], rdi
+	iretq
 
 %endmacro
 
@@ -125,17 +123,17 @@ picMasterMask:
 picSlaveMask:
 	push    rbp
     mov     rbp, rsp
-    mov     ax, di  ; ax = mascara de 16 bits
-    out	0A1h,al
+    mov     ax, di  ; ax = 16-bits mask
+    out	    0A1h,al
     pop     rbp
     retn
 
 
-;División por cero
+;Division by zero
 _exception0Handler:
 	exceptionHandler 0
 
-;Instrucción inválida
+;Invalid opcode
 _exception6Handler:
 	exceptionHandler 6
 
@@ -147,24 +145,8 @@ _irq00Handler:
 _irq01Handler:
 	irqHandlerMaster 1
 
-;Cascade pic never called
-_irq02Handler:
-	irqHandlerMaster 2
-
-;Serial Port 2 and 4
-_irq03Handler:
-	irqHandlerMaster 3
-
-;Serial Port 1 and 3
-_irq04Handler:
-	irqHandlerMaster 4
-
-;USB
-_irq05Handler:
-	irqHandlerMaster 5
-
+;System calls handler
 _syscallHandler:
-
 	push rbp
 	mov rbp, rsp
 
@@ -182,7 +164,6 @@ _syscallHandler:
 	call syscallDispatcher
 	leave
 	iretq
-
 
 haltcpu:
 	cli

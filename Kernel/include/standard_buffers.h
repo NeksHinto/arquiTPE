@@ -15,19 +15,90 @@ typedef struct Buffer {
     int size;
 } Buffer;
 
-//Initializes stdin, stdout and stderr buffers;
+/***************************************************************
+* Function: set_up_buffers
+* Use: set_up_buffers();
+* -------------------------------------------------------------
+* Description: Initializes stdin, stdout and stderr buffers
+*                             to be used.
+* -------------------------------------------------------------
+* Pre-Condition: -
+* Post-Condition: Buffers operational.
+***************************************************************/
 void set_up_buffers();
 
-//Index defines the buffer on which to perform the function.
+/***************************************************************
+* Function: clear_buffer
+* Use: clear_buffer( buffer_index )
+* -------------------------------------------------------------
+* Description: Resets the indexed buffer to its original
+*                             state.
+* -------------------------------------------------------------
+* Pre-Condition: -
+* Post-Condition: Indexed buffer clean.
+***************************************************************/
 void clear_buffers(int index);
+
+/***************************************************************
+* Function:write_char_in_buffer
+* Use: int fails = write_char_in_buffer(index, c );
+* -------------------------------------------------------------
+* Description: If the buffer index is valid, the given
+*                      char is printed in it.
+* -------------------------------------------------------------
+* Pre-Condition: Buffer given is at an initial state.
+* Post-Condition: Buffers given now has the char printed
+*                               in it.
+***************************************************************/
 int write_char_buffer(int index, char character);
+
+/***************************************************************
+* Function: write_string_in_buffer
+* Use: int fails = write_string_in_buffer(index, str);
+* -------------------------------------------------------------
+* Description: If the buffer index is valid, the given
+*                     string is printed in it.
+* -------------------------------------------------------------
+* Pre-Condition: Buffer given is at an initial state.
+* Post-Condition: Buffer given now has the str printed
+*                              in it.
+***************************************************************/
 int write_string_buffer(int index, char * str);
+
+/***************************************************************
+* Function: write_int_in_buffer
+* Use: int fails = write_int_in_buffer(index,number);
+* -------------------------------------------------------------
+* Description: If the buffer index is valid, the given
+*                    number is printed in it.
+* -------------------------------------------------------------
+* Pre-Condition: Buffer given is at an initial state.
+* Post-Condition: Buffer given now has the number printed
+*                              in it.
+***************************************************************/
 int write_int_buffer(int index, uint64_t value,int base);
 
-//Reads a character and removes it from the buffer.
+/***************************************************************
+* Function: read_char_from_buffer
+* Use: char read_char = read_char_from_buffer(index);
+* -------------------------------------------------------------
+* Description: Reads a char from the given buffer.
+* -------------------------------------------------------------
+* Pre-Condition: -
+* Post-Condition: read_char now has the last char from
+*                        the given buffer.
+***************************************************************/
 char read_char_buffer(int index);
 
-//Loads size amount of chars on str from the buffer.
-int read_string_buffer(int index, char * str,int size);
+/***************************************************************
+* Function: read_string_from_buffer
+* Use: int fails = read_string_from_buffer(index, str, strlen)
+* -------------------------------------------------------------
+* Description: Stores the first strlen chars from the buffer
+*                         in the given string.
+* -------------------------------------------------------------
+* Pre-Condition: -
+* Post-Condition: str now has buffer information loaded.
+***************************************************************/int read_string_buffer(int index, char * str,int size);
 
 #endif
