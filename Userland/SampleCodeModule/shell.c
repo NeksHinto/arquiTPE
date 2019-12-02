@@ -9,6 +9,7 @@
 #include <error_handler.h>
 #include <exception_tester.h>
 #include <pseudo_game.h>
+extern void infoReg();
 
 #define HORIZONTAL_MARGIN 2
 #define VERTICAL_MARGIN 0
@@ -241,7 +242,6 @@ static void command_dispatcher(char *buffer) {
       hour -= 3; 
       // Chequear que esto sea correcto, capaz con -9 funcione.
     }
-    
     char hours[3];
     itoa(hour, 16, hours);
     if(strlen(hours) == 1){
@@ -262,6 +262,11 @@ static void command_dispatcher(char *buffer) {
     }
     printf("%s:%s:%s", hours, minutes, seconds);
     return;
+  }
+
+  if( strcmp(command, "inforeg")){
+      infoReg();
+      return;
   }
   if(strcmp(command, "div0")) {
     clear_screen();
@@ -340,6 +345,7 @@ static void help() {
     printf("\ttime -- Shows the current system time.\n");
     printf("\taracnoid -- Opens the aracnoid game.\n\t\tPlayer moves with [A] and [D]\n\t\tPress [X] to exit or [ESC] to pause game.\n");
     printf("\tprintMem -- Makes a memory dump of the first 32 bytes from the given address\n");
+    printf("\tinforeg\n");
 
 }
 
