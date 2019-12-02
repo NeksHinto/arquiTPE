@@ -12,7 +12,7 @@ int strcmp(char * s1, char* s2) {
 int strlen(char* s) {
     int i;
     for(i=0; s[i] != '\0'; i++);
-    return i;
+    return i;|
 }
 
 

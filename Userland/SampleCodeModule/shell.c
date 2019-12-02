@@ -8,6 +8,7 @@
 #include <time_module.h>
 #include <sound_module.h>
 #include <exception_tester.h>
+#include <registers.h>
 
 #define HORIZONTAL_MARGIN   2
 #define VERTICAL_MARGIN     0
@@ -258,6 +259,62 @@ static void command_dispatcher(char *buffer) {
     return;
   }
   
+  if(strcmp(command, "aracnoid")) {
+      aracnoid.game_over = TRUE;
+      clear_screen();
+      aracnoid = pseudo_game(aracnoid);
+      clear_screen();
+      return;
+  }
+  if(strcmp(command, "printMem")){
+      char *str = "123456789 HELLO WORLD 123456789A";
+      struct  s {
+          int nums[6];
+          char c1;
+          char c2;
+          char c3;
+          char c4;
+          char c5;
+          char c6;
+          char c7;
+          char c8;
+
+      }s;
+      for(int i = 0; i < 27; i++)
+          s.nums[i] = i+1;
+      s.c1 = 'H';
+      s.c2 = 'E';
+      s.c3 = 'L';
+      s.c4 = 'L';
+      s.c5 = 'O';
+      s.c6 = '!';
+      s.c7 = '!';
+      s.c8 = '!';
+      clear_screen();
+      printf("\n############################################################\n");
+      printf("#              THIS IS A MEMORY DUMP TEST                  #");
+      printf("\n############################################################\n\n");
+
+      printf("str = %d --> \"123456789 HELLO WORLD 123456789A\"\n\n", str);
+      printMem(str);
+      printf("\n############################################################\n\n");
+      printf("&struct = %d --> \"\n{\n", &s);
+      printf("\t\t\tint nums[6] = { 1 2 3 4 5 6 }\n");
+      printf("\t\t\tchar c1 = 'H'\n");
+      printf("\t\t\tchar c2 = 'E'\n");
+      printf("\t\t\tchar c3 = 'L'\n");
+      printf("\t\t\tchar c4 = 'L'\n");
+      printf("\t\t\tchar c5 = 'O'\n}\"\n");
+
+      printMem(&s);
+      printf("\n############################################################\n\n");
+      return;
+  }
+  if(strcmp(command, "infoReg")){
+    clear_screen();
+    info_reg();
+    return;
+  }
   send_error("Unrecognized command.");
 }
 

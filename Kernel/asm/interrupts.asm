@@ -11,6 +11,8 @@ GLOBAL _exception6Handler
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
 
+GLOBAL _info_reg
+
 GLOBAL getStackPointer
 GLOBAL _syscallHandler
 
@@ -20,6 +22,7 @@ GLOBAL stackPointerBackup
 EXTERN exceptionDispatcher
 EXTERN irqDispatcher
 EXTERN syscallDispatcher
+EXTERN printRegs
 EXTERN main
 
 SECTION .text
@@ -146,6 +149,35 @@ _irq01Handler:
 	irqHandlerMaster 1
 
 ;System calls handler
+;Cascade pic never called
+_irq02Handler:
+	irqHandlerMaster 2
+
+;Serial Port 2 and 4
+_irq03Handler:
+	irqHandlerMaster 3
+
+;Serial Port 1 and 3
+_irq04Handler:
+	irqHandlerMaster 4
+
+;USB
+_irq05Handler:
+	irqHandlerMaster 5
+
+_info_reg:
+	enter 0,0
+
+	pushState
+	mov rdi, rsp
+
+	call printRegs
+
+	mov rax, 0
+
+	leave
+	ret
+
 _syscallHandler:
 	push rbp
 	mov rbp, rsp

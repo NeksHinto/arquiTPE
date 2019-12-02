@@ -1,6 +1,7 @@
 #include <std_buffers.h>
 #include <video_driver.h>
 #include <time.h>
+#include <registers.h>
 #include <sound_driver.h>
 
 typedef uint64_t( *SystemCall )();
@@ -32,8 +33,9 @@ static int __get_minutes();
 static int __get_seconds();
 static int __ticks_elapsed();
 
-SystemCall syscall_array[] = {
-        0, 0, 0,
+static void __info_reg();
+
+SystemCall syscall_array[] = { 0, 0, 0,
     (SystemCall)__get_width,
     (SystemCall)__get_height,
     (SystemCall)__read_pixel,
@@ -52,7 +54,8 @@ SystemCall syscall_array[] = {
     (SystemCall)__get_hours,
     (SystemCall)__get_minutes,
     (SystemCall)__get_seconds,
-    (SystemCall)__ticks_elapsed
+    (SystemCall)__ticks_elapsed,
+    (SystemCall)__info_reg,
 };
 
 void syscallDispatcher(uint64_t index, uint64_t a, uint64_t b, uint64_t c, uint64_t d, uint64_t e){
@@ -133,4 +136,8 @@ static int __get_seconds() {
 
 static int __ticks_elapsed() {
     return ticks_elapsed();
+}
+
+static void __info_reg(){
+    return info_reg();
 }
