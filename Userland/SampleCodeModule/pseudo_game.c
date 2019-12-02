@@ -26,6 +26,8 @@ static const Color violet = {120, 40, 140};
 
 
 /** Static prototypes */
+static void draw_lives();
+static void update_lives();
 static void draw_player();
 static Game start_game();
 static void draw_borders_arc(Color color);
@@ -65,7 +67,7 @@ static void draw_game(){
     draw_player();
     draw_entity(game->ball);
     draw_gameBoard();
-
+    draw_lives();
     for(int i = 0; i < MAX_BLOCKS; i++){
         if(game->blocks[i].visible)
             draw_entity(game->blocks[i]);
@@ -94,8 +96,24 @@ static void create_blocks(GameADT sGame){
     sGame->remaining_blocks = qBlocks;
 }
 
+static void draw_lives(){
+    char simbol = '*';
+    int i, j;
+
+    for(i = 0, j = 480; i <= game->lives; i++, j+=15){
+        write_sized_char(simbol,j, 33, red, black, 1);
+    }
+}
+
+static update_lives(){
+    int i, j, k;
+    char simbol = " ";
+    k = 2 - game->lives;
+    write_sized_char(simbol,525 - (15 * k), 33, black, black, 1);
+}
+
 static void draw_gameBoard(){
-    write_sized_string("ARACNOID",440, 15, white, black, 2, 15);
+    write_sized_string("ARACNOID",440, 15, white, black, 1, 15);
     char time[9] = {'0','0', '.', '0', '0', '.', '0', '0', '\0'};
     char score[8] = {'0', '0', '0', '0', '0', '0', '0', '\0'};
     char aux[8];
@@ -271,7 +289,6 @@ Game pseudo_game(Game aracnoid){
 
     time_counter = ticks_elapsed();
     start_time = get_seconds();
-
     while((c = getchar()) != 'x' && c != 'X' && c != ESC && !game->game_over ){
         if( (c == 'd' || c == 'D') && game->player.position.x <= SCREEN_WIDTH - 15 - game->player.width ){
             game->player.speed.x = 30;
@@ -300,10 +317,13 @@ Game pseudo_game(Game aracnoid){
 
             }
             if( game->ball.position.y > SCREEN_HEIGHT ){
-                if( game->lives){
-                    game->lives--;
+                if(game->lives){
+                    game->lives = game->lives - 1;
                     game->ball = (Entity){ {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -20}, 10, 10, TRUE, yellow};
+                    delete_entity(game->player);
+                    game->player = (Entity){ {.x = SCREEN_WIDTH/2 - 30, .y = SCREEN_HEIGHT - 10},{.x = 0, .y = 0}, PLAYER_HEIGHT, PLAYER_WIDTH, TRUE, green};
                     game->game_speed = 7;
+                    update_lives();
                 }
                 else {
                     game->game_over = TRUE;
@@ -325,6 +345,7 @@ Game pseudo_game(Game aracnoid){
                 draw_entity(game->blocks[i]);
             }
         }
+
         if( check_impact(game->ball, game->blocks) ){
             game->ball.speed.y *= -1;
             wait(1);
