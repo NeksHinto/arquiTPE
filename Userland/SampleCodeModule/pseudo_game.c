@@ -53,7 +53,7 @@ static Game start_game(){
                                 .remaining_blocks = MAX_BLOCKS,
                                 .score = 0,
                                 .game_speed = 7,
-                                .lives = 3,
+                                .lives = 2,
     };
     create_blocks(&game_started);
     return game_started;
@@ -303,6 +303,7 @@ Game pseudo_game(Game aracnoid){
                 if( game->lives){
                     game->lives--;
                     game->ball = (Entity){ {.x= SCREEN_WIDTH/2 - 5, .y = SCREEN_HEIGHT - 20},{.x = 0, .y = -20}, 10, 10, TRUE, yellow};
+                    game->game_speed = 7;
                 }
                 else {
                     game->game_over = TRUE;
