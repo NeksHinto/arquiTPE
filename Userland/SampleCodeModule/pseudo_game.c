@@ -56,6 +56,7 @@ static Game start_game(){
                                 .score = 0,
                                 .game_speed = 7,
                                 .lives = 2,
+                                .time_played = 0,
     };
     create_blocks(&game_started);
     return game_started;
@@ -119,9 +120,9 @@ static void draw_gameBoard(){
     char aux[8];
     int i, j, length = 0;
 
-    real_time_played = get_seconds() - start_time;
+    real_time_played = get_seconds() - start_time + game->time_played;
     write_sized_string("TIME: ", 15, 15, white, black, 2, 15);
-    itoa(real_time_played / 3600, 10, time + 0 );
+    itoa(real_time_played/ 3600, 10, time + 0 );
     if( time[1] == 0 ){
         time[1] = time[0];
         time[0] = '0';
@@ -129,7 +130,7 @@ static void draw_gameBoard(){
     else{
         time[2] = '.';
     }
-    itoa((real_time_played / 60) % 60, 10, time + 3 );
+    itoa((real_time_played/ 60) % 60, 10, time + 3 );
     if( time[4] == 0 ){
         time[4] = time[3];
         time[3] = '0';
@@ -381,6 +382,7 @@ Game pseudo_game(Game aracnoid){
     }
 
     if( c == ESC ){
+        game->time_played = get_seconds() - start_time;
         return *game;
     }
 

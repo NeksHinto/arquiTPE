@@ -31,9 +31,8 @@ typedef struct Game {
     Entity blocks[MAX_BLOCKS];
     Entity ball;
     Entity player;
-    int game_over,remaining_blocks, score, game_speed, lives;
+    int game_over,remaining_blocks, score, game_speed, lives, time_played;
 } Game;
-
 typedef Game* GameADT;
 
 Game pseudo_game(Game aracnoid);
